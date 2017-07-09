@@ -1,8 +1,8 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas de sonido                                 */
+/* Basic sound function library */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -15,34 +15,34 @@
 /*****************************************************************************/
 
 /*
- * Variables estáticas de la biblioteca
+ * Static library variables
  */
 
 sound_ds_struct gba_sound_dss[2]=
 {
   /* SOUND_DSA */
   {
-    2,         /* SOUNDCNT_H: desplazamiento para el volumen */
-    8,         /* SOUNDCNT_H: desplazamiento para las lineas L y R */
-    10,        /* SOUNDCNT_H: desplazamiento para el temporizador */
-    11,        /* SOUNDCNT_H: desplazamiento para el reset */
-    (gba_word32) &(gba_sound_regs.FIFO_A)  /* Puntero a la cola FIFO */
+    2,         /* SOUNDCNT_H: Shift to Volume */
+    8,         /* SOUNDCNT_H: displacement for lines L and R */
+    10,        /* SOUNDCNT_H: scroll to the timer */
+    11,        /* SOUNDCNT_H: scroll to the reset */
+    (gba_word32) &(gba_sound_regs.FIFO_A)  /* Pointer to the FIFO queue */
   },
 
   /* SOUND_DSB */
   {
-    3,         /* SOUNDCNT_H: desplazamiento para el volumen */
-    12,        /* SOUNDCNT_H: desplazamiento para las lineas L y R */
-    14,        /* SOUNDCNT_H: desplazamiento para el temporizador */
-    15,        /* SOUNDCNT_H: desplazamiento para el reset */
-    (gba_word32) &(gba_sound_regs.FIFO_B) /* Puntero a la cola FIFO */
+    3,         /* SOUNDCNT_H: Shift to Volume */
+    12,        /* SOUNDCNT_H: displacement for lines L and R */
+    14,        /* SOUNDCNT_H: scroll to the timer */
+    15,        /* SOUNDCNT_H: scroll to the reset */
+    (gba_word32) &(gba_sound_regs.FIFO_B) /* Pointer to the FIFO queue */
   }
 };
 
 /*****************************************************************************/
 
 /*
- * Habilita el controlador de sonido
+ * Enable sound driver
  */
 inline void gba_sound_enable()
 {
@@ -52,7 +52,7 @@ inline void gba_sound_enable()
 /*****************************************************************************/
 
 /*
- * Deshabilita el controlador de sonido
+ * Disable sound driver
  */
 inline void gba_sound_disable()
 {
@@ -62,9 +62,9 @@ inline void gba_sound_disable()
 /*****************************************************************************/
 
 /*
- * Inicializa el temporizador que se usará en un canal de sonido directo.
- * @param channel Número de canal (SOUND_DSA o SOUND_DSB)
- * @param timer   Temporizador (sólo TIMER0 o TIMER1)
+ * Initializes the timer to be used on a direct sound channel.
+ * @param channel Channel number (SOUND_DSA or SOUND_DSB)
+ * @param timer Timer (TIMER0 or TIMER1 only)
  */
 inline void gba_sound_ds_set_timer(u_char channel, u_char timer)
 {
@@ -74,9 +74,9 @@ inline void gba_sound_ds_set_timer(u_char channel, u_char timer)
 /*****************************************************************************/
 
 /*
- * Inicializa el volumen de un canal de sonido directo.
- * @param channel Número de canal (SOUND_DSA o SOUND_DSB)
- * @param volume  Volumen (SOUND_DS_OUTPUT_RATIO_50 o SOUND_DS_OUTPUT_RATIO_100)
+ * Initializes the volume of a direct sound channel.
+ * @param channel Channel number (SOUND_DSA or SOUND_DSB)
+ * @param volume Volume (SOUND_DS_OUTPUT_RATIO_50 or SOUND_DS_OUTPUT_RATIO_100)
  */
 inline void gba_sound_ds_set_volume(u_char channel, u_char volume)
 {
@@ -86,10 +86,10 @@ inline void gba_sound_ds_set_volume(u_char channel, u_char volume)
 /*****************************************************************************/
 
 /*
- * Inicializa la salida de un canal de sonido directo.
- * @param channel Número de canal (SOUND_DSA o SOUND_DSB)
- * @param output  Tipo de salida  (SOUND_DS_OUTPUT_TO_RIGHT,
- *                SOUND_DS_OUTPUT_TO_LEFT o SOUND_DS_OUTPUT_TO_BOTH)
+ * Initializes the output of a direct sound channel.
+ * @param channel Channel number (SOUND_DSA or SOUND_DSB)
+ * @param output Output Type (SOUND_DS_OUTPUT_TO_RIGHT,
+ *                SOUND_DS_OUTPUT_TO_LEFT or SOUND_DS_OUTPUT_TO_BOTH)
  */
 inline void gba_sound_ds_set_output(u_char channel, u_char output)
 {
@@ -99,8 +99,8 @@ inline void gba_sound_ds_set_output(u_char channel, u_char output)
 /*****************************************************************************/
 
 /*
- * Resetea la cola de un canal de sonido directo.
- * @param channel Número de canal (SOUND_DSA o SOUND_DSB)
+ * Resets the queue of a direct sound channel.
+ * @param channel Channel number (SOUND_DSA or SOUND_DSB)
  */
 inline void gba_sound_ds_fifo_reset(u_char channel)
 {
@@ -110,18 +110,16 @@ inline void gba_sound_ds_fifo_reset(u_char channel)
 /*****************************************************************************/
 
 /*
- * Reproduce una muestra de sonido.
- *
- * Usa los temporizadores TIMER0 y TIMER1 para la reproducción. TIMER0 mide el
- * tiempo entre muestras y TIMER1 va contando el número de muestras que se van
- * reproduciendo.
- * También programa una interrupción en TIMER1 que se procucirá cuando se haya
- * terminado la reproducción y que se atenderá mediante la función gba_sound_ds_stop
- *
- * @param channel Canal de sonido directo (SOUND_DSA o SOUND_DSB)
- * @param samples Buffer con las muestras
- * @param size    Tamaño del buffer en bytes
- * @param rate    Frecuencia de muestreo
+ * Plays a sample sound.
+ * Use the timers TIMER0 and TIMER1 for playback. TIMER0 measures the
+ * Time between samples and TIMER1 counts the number of samples that go
+ * Reproducing.
+ * It also programs an interrupt in TIMER1 that will be
+ * Finished playback and will be answered by the gba_sound_ds_stop
+ * @param channel Direct sound channel (SOUND_DSA or SOUND_DSB)
+ * @param samples Buffer with samples
+ * @param size Buffer size in bytes
+ * @param rate Sampling frequency
  */
 void gba_sound_ds_play(u_char channel, const void* samples, u_short size, u_short rate)
 {
@@ -129,34 +127,34 @@ void gba_sound_ds_play(u_char channel, const void* samples, u_short size, u_shor
 
   gba_dma_sound_init(DMA1, (void *)gba_sound_dss[channel].FIFO, samples);
 
-  /* Reseteamos la cola FIFO */
+  /* Reset the FIFO queue */
   gba_sound_ds_fifo_reset(channel);
 
-  /* Fijamos el temporizador que se usará para gestionar la frecuencia */
+  /* Set the timer to be used to manage the frequency */
   gba_sound_ds_set_timer(channel, TIMER0);
 
-  /* Calculamos el número de ciclos que deben pasar entre cada muestra */
+  /* We calculate the number of cycles that must pass between each sample */
   clocks_per_sample = gba_div(MCK, rate);
 
-  /* Calculamos el valor inicial para el temporizador */
+  /* We calculate the initial value for the timer */
   gba_timer_init(TIMER0, TIMER_FREQ_1, TIMER_OVERFLOW - clocks_per_sample);
 
   /*
-   * Programamos el temporizador que contará el número de muestras reproducidas
-   * para que genere una interrupción cuando se reproduzca la últime muestra
+   * We program the timer that will count the number of samples played
+   * To generate an interrupt when the last sample is played
    */
   gba_timer_init(TIMER1, TIMER_CASCADE | TIMER_INT, TIMER_OVERFLOW - size);
   
-  /* Habilitamos la atención de la interrupción */
+  /* We enable the attention of the interruption */
   gba_irq_enable(IRQ_TIMER1, gba_sound_ds_stop);
   
-  /* Habilitamos el controlador de sonido */
+  /* We enable the sound driver */
   gba_sound_enable();
 
-  /* Habilitamos el canal de DMA1 */
+  /* We enable the DMA1 channel */
   gba_dma_enable(DMA1);
 
-  /* Habilitamos los temporizadores */
+  /* We enable timers */
   gba_timer_start(TIMER0);
   gba_timer_start(TIMER1);
 }
@@ -164,7 +162,7 @@ void gba_sound_ds_play(u_char channel, const void* samples, u_short size, u_shor
 /*****************************************************************************/
 
 /*
- * Finaliza la reproducción de sonido
+ * Ends sound playback
  */
 inline void gba_sound_ds_stop()
 {

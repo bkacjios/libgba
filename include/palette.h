@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Tipos de datos y constantes para manejar la memoria de paleta de la GBA   */
+/* Data types and constants to handle GBA palette memory */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *  We only include this file once
  */
 #ifndef palette_h
 #define palette_h
@@ -15,25 +15,25 @@
 #include    "std_c.h"
 
 /*****************************************************************************/
-/* Interfaz de la memoria para almacenar las paletas                         */
+/* Memory interface to store the palettes */
 /*****************************************************************************/
 
 /*
- * En la GBA se pueden usar o bien una paleta de 256 colores o bien 16 paletas
- * de 16 colores tanto para los fondos como para los sprites
+ *  In the GBA you can use either a palette of 256 colors or 16 palettes
+ *  Of 16 colors for both backgrounds and sprites
  */
 typedef short gba_palette16[16];
 typedef short gba_palette256[256];
 
 typedef struct
 {
-  union  /* Paleta para los fondos */
+  union  /* Pallet for backgrounds */
   {
     gba_palette16 bg16[16];
     gba_palette256 bg256;
   } __attribute__ ((packed));
 
-  union  /* Paleta para los sprites */
+  union  /* Palette for sprites */
   {
     gba_palette16 obj16[16];
     gba_palette256 obj256;

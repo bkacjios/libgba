@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para manejar interrupciones en la GBA     */
+/* Basic functions library for handling interruptions in the GBA */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *  We only include this file once
  */
 #ifndef gba_irq_h
 #define gba_irq_h
@@ -17,31 +17,31 @@
 /*****************************************************************************/
 
 /*
- * Habilita la gestión de interrupciones
+ *  Enable interrupt management
  */
 inline void gba_irq_enable_all();
 
 /*****************************************************************************/
 
 /*
- * Deshabilita la gestión de interrupciones
+ *  Disable interrupt management
  */
 inline void gba_irq_disable_all();
 
 /*****************************************************************************/
 
 /*
- * Función para habilitar la atención de interrupciones concretas
- * @param masc    Máscara para seleccionar interrupciones 
- * @param handler Función para gestionar las interrupciones
+ *  Function to enable the attention of concrete interrupts
+ *  @param masc Mask to select interrupts
+ *  @param handler Function to handle interrupts
  */
 void gba_irq_enable(short masc, gba_irq_handler handler);
 
 /*****************************************************************************/
 
 /*
- * Deshabilita interrupciones concretas
- * @param masc Máscara para seleccionar interrupciones 
+ *  Disable specific interrupts
+ *  @param masc Mask to select interrupts
  */
 inline void gba_irq_disable(short masc);
 

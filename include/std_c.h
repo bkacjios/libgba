@@ -1,20 +1,20 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Tipos y constantes para programar en C estándar                           */
+/* Types and constants for programming in standard C */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *  We only include this file once
  */
 #ifndef std_c_h
 #define std_c_h
 
 
 /*****************************************************************************/
-/* Tipos estándar                                                            */
+/* Standard Types */
 /*****************************************************************************/
 
 typedef unsigned int            u_int;
@@ -23,7 +23,7 @@ typedef unsigned char           u_char;
 typedef signed short            fixed_p;
 
 /*****************************************************************************/
-/* Valores booleanos                                                         */
+/* Boolean values */
 /*****************************************************************************/
 
 #define TRUE                    1
@@ -35,7 +35,7 @@ typedef signed short            fixed_p;
 
 
 /*****************************************************************************/
-/* Macros                                                                    */
+/* Macros */
 /*****************************************************************************/
 
 #define MIN(x,y)                ((x) < (y) ? (x) : (y))

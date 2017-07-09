@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas de vídeo                                  */
+/* Basic video library functions */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ * We only include this file once
  */
 #ifndef gba_draw_h
 #define gba_draw_h
@@ -17,7 +17,7 @@
 /*****************************************************************************/
 
 /*
- * Identificadores para los búferes de vídeo en los modos con doble búfer
+ * Identifiers for video buffers in dual-buffered modes
  */
 #define FRONT_BUFFER           0
 #define BACK_BUFFER            1
@@ -25,103 +25,103 @@
 /*****************************************************************************/
 
 /*
- * Estructura para manejar una fuente de pantalla.
+ * Structure to handle a screen font.
  */
 typedef struct
 {
-  u_char        width;         /* Ancho de los caracteres */
-  u_char        height;        /* Alto de los caracteres */
-  u_char        first_ascii;   /* Código ASCII del primer carácter de la fuente */
-  u_char        last_ascii;    /* Código ASCII del último carácter de la fuente */
-  const u_char* bitmaps;       /* Puntero a los bitmaps de los caracteres */
+  u_char        width;         /* Width of characters */
+  u_char        height;        /* High characters */
+  u_char        first_ascii;   /* ASCII code of the first character of the font */
+  u_char        last_ascii;    /* ASCII code of the last character of the font */
+  const u_char* bitmaps;       /* Pointer to character bitmaps */
 } font_struct;
 
 /*****************************************************************************/
 
 /*
- * Función para fijar el buffer que se usará para dibujar en los modos bitmap
- * con doble buffer (modos 4 y 5).
- * @param buffer Identificador del buffer (FRONT_BUFFER o BACK_BUFFER)
+ * Function to set the buffer to be used for drawing in bitmap modes
+ * With double buffer (modes 4 and 5).
+ * @param buffer Buffer ID (FRONT_BUFFER or BACK_BUFFER)
  */
 inline void gba_draw_set_buffer(u_short buffer);
 
 /*****************************************************************************/
 
 /*
- * Función para fijar el color que se usará para dibujar en los modos bitmap.
- * Para los modos 3 y 5 se usará como una tripleta RGB de 15 bits.
- * Para el modo 4 sólo se usarán los 8 bits inferiores como índice de la paleta.
- * @param color El color
+ * Function to set the color to be used for drawing in bitmap modes.
+ * For modes 3 and 5 it will be used as a 15 bit RGB triplet.
+ * For mode 4 only the lower 8 bits will be used as the index of the palette.
+ * @param color The color
  */
 inline void gba_draw_set_color(u_short color);
 
 /*****************************************************************************/
 
 /*
- * Función para fijar las coordenadas del cursor.
- * @param x coordenada x
- * @param y coordenada y
+ * Function to set cursor coordinates.
+ * @param x coordinate x
+ * @param and coordinate y
  */
 inline void gba_draw_set_cursor(u_char x, u_char y);
 
 /*****************************************************************************/
 
 /*
- * Función para fijar la fuente por defecto.
- * @param font La fuente
+ * Function to set the default font.
+ * @param font The font
  */
 inline void gba_draw_set_font(font_struct font);
 
 /*****************************************************************************/
 
 /*
- * Función para dibujar un pixel en los modos 3, 4 y 5
- * @param x   Coordenada x de la pantalla
- * @param y   Coordenada y de la pantalla
+ * Function for drawing a pixel in modes 3, 4 and 5
+ * @param x x coordinate of the screen
+ * @param and Coordinate and display
  */
 void gba_draw_pixel(u_short x, u_short y);
 
 /*****************************************************************************/
 
 /*
- * Función para dibujar una línea mediante el algoritmo de Bresenham
- * @param x1  Coordenada x del primer extremo
- * @param y1  Coordenada y del primer extremo
- * @param x2  Coordenada x del segundo extremo
- * @param y2  Coordenada y del segundo extremo
+ * Function for drawing a line using the Bresenham algorithm
+ * @param x1 x-coordinate of the first end
+ * @param y1 Coordinate and the first end
+ * @param x2 x coordinate of the second end
+ * @param y2 Coordinate and the second end
  */
 void gba_draw_line(u_short x1, u_short y1, u_short x2, u_short y2);
 
 /*****************************************************************************/
 
 /*
- * Función para dibujar un círculo
- * @param xCenter  Coordenada x del centro
- * @param yCenter  Coordenada y del centro
- * @param radius   Radio
+ * Function to draw a circle
+ * @param xCenter x coordinate of the center
+ * @param yCenter Coordinate and center
+ * @param radius Radio
  */
 void gba_draw_circle(u_short xCenter, u_short yCenter, u_short radius);
 
 /*****************************************************************************/
 
 /*
- * Función para dibujar una caja coloreada
- * @param left   Coordenada x de la esquina superior-izquierda
- * @param top    Coordenada y de la esquina superior-izquierda
- * @param right  Coordenada x de la esquina inferior-derecha
- * @param bottom Coordenada y de la esquina inferior-derecha
+ * Function to draw a colored box
+ * @param left x-coordinate of the upper-left corner
+ * @param top Coordinate and top-left corner
+ * @param right x coordinate of the bottom-right corner
+ * @param bottom Coordinate and bottom-right corner
  */
 void gba_draw_box(u_short left, u_short top, u_short right, u_short bottom);
 
 /*****************************************************************************/
 
 /*
- * Función para dibujar un carácter en pantalla.
- * Previamente se debe fijar el cursor a la posición donde se empezará a
- * escribir, que por defecto es la (0,0).
- * De momento no se han implementado ni scroll de pantalla ni caracteres de
- * control.
- * @param the_char El carácter
+ * Function to draw a character on screen.
+ * Previously the cursor should be set to the position where it will start
+ * Write, which by default is (0,0).
+ * No screen scroll or character characters have been implemented at this time.
+ * control.
+ * @param the_char The character
  */
 void gba_draw_char(u_char the_char);
 

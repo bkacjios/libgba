@@ -1,14 +1,14 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Tipos de datos y constantes para el controlador de interrupciones         */
-/* de la GBA                                                                 */
+/* Data types and constants for the interrupt handler */
+/* Of the GBA */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *  We only include this file once
  */
 #ifndef irq_h
 #define irq_h
@@ -16,36 +16,36 @@
 #include    "std_c.h"
 
 /*****************************************************************************/
-/* Interfaz del controlador de interrupciones de la consola                  */
+/* Console Interrupt Controller Interface */
 /*****************************************************************************/
 
 typedef struct
 {
-  short IE;            /* interrupt enable register */
-  short IF;            /* interrupt request flags / irq acknowledge */
-  short filler[2];     /* not used & waitcnt */
-  short IME;           /* interrput master enable register */
+  short IE;            /* Interrupt enable register */
+  short IF;            /* Interrupt request flags / irq acknowledge */
+  short filler[2];     /* Not used & waitcnt */
+  short IME;           /* Interrput master enable register */
 } gba_irq_regs_struct;
 
 extern volatile gba_irq_regs_struct gba_irq_regs;
 
 /*
- * Tipo para definir los manejadores de interripciones.
+ *  Type to define interrupt handlers.
  */
 typedef void (*gba_irq_handler)(void);
 
 /*
- * Tabla de punteros a manejadores de interrupciones
+ *  Table of pointers to interrupt handlers
  */
 extern volatile gba_irq_handler *gba_irq_handler_table;
 
 
 /*****************************************************************************/
-/* IE, IF: Máscaras para las interrupciones                                  */
+/* IE, IF: Masks for interruptions */
 /*****************************************************************************/
 
 /*
- * Máscaras para cada una de las interrupciones
+ *  Masks for each of the interruptions
  */
 #define IRQ_VBLANK                 ((short) (1 << 0))
 #define IRQ_HBLANK                 ((short) (1 << 1))
@@ -64,7 +64,7 @@ extern volatile gba_irq_handler *gba_irq_handler_table;
 
 
 /*****************************************************************************/
-/* IME: Habilitación de todas las interrupciones                             */
+/* IME: Enabling all interrupts */
 /*****************************************************************************/
 
 #define IRQ_DISABLE                 ((short) 0)

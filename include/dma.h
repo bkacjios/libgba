@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Tipos de datos y constantes para el controlador de DMA de la GBA          */
+/* Data types and constants for the GBA DMA driver */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ * We only include this file once
  */
 #ifndef dma_H
 #define dma_H
@@ -15,7 +15,7 @@
 #include    "std_c.h"
 
 /*****************************************************************************/
-/* Interfaz del controlador de DMA de la consola                             */
+/* Console DMA driver interface */
 /*****************************************************************************/
 
 typedef struct
@@ -42,56 +42,56 @@ extern volatile gba_dma_regs_struct gba_dma_regs;
 
 
 /*****************************************************************************/
-/* DMAxCNT_H: Control de DMA                                                 */
+/* DMAxCNT_H: DMA Control */
 /*****************************************************************************/
 
 /*
- * Control de la dirección de destino
+ * Control of destination address
  */
-#define DMA_DEST_INCREMENT         ((short) (0 << 5))  /* Incremento */
-#define DMA_DEST_DECREMENT         ((short) (1 << 5))  /* Decremento */
-#define DMA_DEST_FIXED             ((short) (2 << 5))  /* Fijo */
-#define DMA_DEST_RELOAD            ((short) (3 << 5))  /* Incremento/Recarga */
+#define DMA_DEST_INCREMENT         ((short) (0 << 5))  /* Increase */
+#define DMA_DEST_DECREMENT         ((short) (1 << 5))  /* Decrement */
+#define DMA_DEST_FIXED             ((short) (2 << 5))  /* Fixed */
+#define DMA_DEST_RELOAD            ((short) (3 << 5))  /* Increase / Reload */
 
 /*
- * Control de la dirección de origen
+ * Control of the origin address
  */
-#define DMA_SOURCE_INCREMENT       ((short) (0 << 7))  /* Incremento */
-#define DMA_SOURCE_DECREMENT       ((short) (1 << 7))  /* Decremento */
-#define DMA_SOURCE_FIXED           ((short) (2 << 7))  /* Fijo */
+#define DMA_SOURCE_INCREMENT       ((short) (0 << 7))  /* Increase */
+#define DMA_SOURCE_DECREMENT       ((short) (1 << 7))  /* Decrement */
+#define DMA_SOURCE_FIXED           ((short) (2 << 7))  /* Fixed */
 
 /*
- * Repetición de la transferencia
+ * Repeat Transfer
  */
-#define DMA_REPEAT                 ((short) (1 << 9))  /* Activar repetición */
+#define DMA_REPEAT                 ((short) (1 << 9))  /* Enable repeat */
  
 /*
- * Tipo de transferencia
+ * Type of transfer
  */
-#define DMA_16                     ((short) (0 << 10)) /* Transferencia en unidades de 16 bits */
-#define DMA_32                     ((short) (1 << 10)) /* Transferencia en unidades de 32 bits */
+#define DMA_16                     ((short) (0 << 10)) /* Transfer in 16-bit units */
+#define DMA_32                     ((short) (1 << 10)) /* Transfer in 32-bit drives */
 
 /*
- * DMA hacia/desde el cartucho  (Sólo para el canal 3)
+ * DMA to / from the cartridge (Only for channel 3)
  */
 #define DMA_GAME_PACK_DRQ          ((short) (1 << 11))
 
 /*
- * Temporización del comienzo de la transferencia
+ * Timing of the start of the transfer
  */
 #define DMA_TIMING_IMMEDIATE       ((short) (0 << 12))
 #define DMA_TIMING_VBLANK          ((short) (1 << 12))
 #define DMA_TIMING_HBLANK          ((short) (2 << 12))
-#define DMA_TIMING_SYNC_TO_DISPLAY ((short) (3 << 12)) /* Sólo para el DMA3 */
-#define DMA_TIMING_DSOUND          ((short) (3 << 12)) /* Sólo para el DMA1 y DMA2 */
+#define DMA_TIMING_SYNC_TO_DISPLAY ((short) (3 << 12)) /* Only for DMA3 */
+#define DMA_TIMING_DSOUND          ((short) (3 << 12)) /* Only for DMA1 and DMA2 */
 
 /*
- * Generación de una interrupción cuando acabe la copia
+ * Generating an interrupt when the copy is finished
  */
 #define DMA_INT                    ((short) (1 << 14))
 
 /*
- * Habilitación de DMA
+ * DMA Enablement
  */
 #define DMA_ENABLE                 ((short) (1 << 15))
 

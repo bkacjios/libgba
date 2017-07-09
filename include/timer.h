@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Tipos de datos y constantes para los temporizadores de la GBA             */
+/* Data types and constants for the GBA timers */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *  We only include this file once
  */
 #ifndef timer_h
 #define timer_h
@@ -15,48 +15,48 @@
 #include    "std_c.h"
 
 /*****************************************************************************/
-/* Interfaz para los temporizadores de la consola                            */
+/* Interface for console timers */
 /*****************************************************************************/
 
 typedef struct
 {
-  short TM0CNT_L;      /* timer 0 counter/reload */
-  short TM0CNT_H;      /* timer 0 control */
-  short TM1CNT_L;      /* timer 1 counter/reload */
-  short TM1CNT_H;      /* timer 1 control */
-  short TM2CNT_L;      /* timer 2 counter/reload */
-  short TM2CNT_H;      /* timer 2 control */
-  short TM3CNT_L;      /* timer 3 counter/reload */
-  short TM3CNT_H;      /* timer 3 control */
+  short TM0CNT_L;      /* Timer 0 counter / reload */
+  short TM0CNT_H;      /* Timer 0 control */
+  short TM1CNT_L;      /* Timer 1 counter / reload */
+  short TM1CNT_H;      /* Timer 1 control */
+  short TM2CNT_L;      /* Timer 2 counter / reload */
+  short TM2CNT_H;      /* Timer 2 control */
+  short TM3CNT_L;      /* Timer 3 counter / reload */
+  short TM3CNT_H;      /* Timer 3 control */
 } gba_timer_regs_struct;
 
 extern volatile gba_timer_regs_struct gba_timer_regs;
 
 
 /*****************************************************************************/
-/* TMxCNT_H: Control de los temporizadores                                   */
+/* TMxCNT_H: Timer Control */
 /*****************************************************************************/
 
 /*
- * Pre-escalado del la frecuencia del temporizador
+ *  Pre-scaling the timer frequency
  */
-#define TIMER_FREQ_1               ((short) 0)         /* Cada ciclo del reloj del sistema */
-#define TIMER_FREQ_64              ((short) 1)         /* Cada 64 ciclos */
-#define TIMER_FREQ_256             ((short) 2)         /* Cada 256 ciclos */
-#define TIMER_FREQ_1024            ((short) 3)         /* Cada 1024 ciclos */
+#define TIMER_FREQ_1               ((short) 0)         /* Each cycle of the system clock */
+#define TIMER_FREQ_64              ((short) 1)         /* Every 64 cycles */
+#define TIMER_FREQ_256             ((short) 2)         /* Every 256 cycles */
+#define TIMER_FREQ_1024            ((short) 3)         /* Every 1024 cycles */
 
 /*
- * Para encadenar los temporizadores. En este caso se ignora el factor de pre-escalado.
+ *  To chain the timers. In this case the pre-scaling factor is ignored.
  */
 #define TIMER_CASCADE              ((short) (1 << 2))
   
 /*
- * Generación de una interrupción cuando el temporizador sobrepase el valor limite
+ *  Generation of an interruption when the timer exceeds the limit value
  */
 #define TIMER_INT                  ((short) (1 << 6))
 
 /*
- * Habilitación del temporizador
+ *  Enabling the timer
  */
 #define TIMER_ENABLE               ((short) (1 << 7))
 

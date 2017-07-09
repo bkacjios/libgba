@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones BIOS de la GBA                                    */
+/* GBA BIOS Function Library */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ * We only include this file once
  */
 #ifndef gba_gba_h
 #define gba_gba_h
@@ -17,130 +17,125 @@
 /*****************************************************************************/
 
 /*
- * Constantes para crear la máscara de bits de gba_register_ram_reset.
+ * Constants to create the bitmask of gba_register_ram_reset.
  */
-#define RESET_EWRAM    (1 << 0) /* No usar cuando se retorna a WRAM */
-#define RESET_IWRAM    (1 << 1) /* Excluye los últimos 0x200 bytes */
+#define RESET_EWRAM    (1 << 0) /* Do not use when WRAM is returned */
+#define RESET_IWRAM    (1 << 1) /* Exclude the last 0x200 bytes */
 #define RESET_PALETTE  (1 << 2)
 #define RESET_VRAM     (1 << 3)
-#define RESET_OAM      (1 << 4) /* La rellena con ceros: no oculta los sprites */
-#define RESET_SIO      (1 << 5) /* Se cambia al modo de propósito general */
+#define RESET_OAM      (1 << 4) /* Fill it with zeros: it does not hide the sprites */
+#define RESET_SIO      (1 << 5) /* Switch to general-purpose mode */
 #define RESET_SOUND    (1 << 6)
-#define RESET_REMAINIG (1 << 7) /* Resto de los registros (menos SIO y sonido) */
+#define RESET_REMAINIG (1 << 7) /* Rest of records (less SIO and sound) */
 
 /*****************************************************************************/
 
 /*
- * Función 0x00:
- * Soft reset.
- *  - Limpia la zona de IWRAM desde 0x03007e00-0x03007fff
- *  - Inicializa r0-r12 a cero
- *  - Inicializa los punteros de pila de los modos USER, SVC e IRQ
- *  - Cambia al modo de ejecución USER
- *  - Salta a la dirección 0x08000000 o 0x02000000 dependiendo del contenido
- *    de RETURN_ADDRESS_SEL (0x03007ffa):
- *      - 0x00: Salta a la 0x08000000 (defecto)
- *      - otro: Salta a la dirección 0x02000000
+ * Function 0x00:
+ * Soft reset.
+ *  - Clears the IWRAM zone from 0x03007e00-0x03007fff
+ *  - Initialize r0-r12 to zero
+ *  - Initializes the stack pointers of the USER, SVC and IRQ modes
+ *  - Switch to USER mode of execution
+ *  - Jump to the address 0x08000000 or 0x02000000 depending on the content
+ *    Of RETURN_ADDRESS_SEL (0x03007ffa):
+ *      - 0x00: Jump to 0x08000000 (default)
+ *      - other: Jump to the address 0x02000000
  */
 extern void gba_soft_reset(void);
 
 /*****************************************************************************/
 
 /*
- * Función 0x01:
- * Register RAM reset.
- *  - Limpia los registros de E/S y las zonas de memoria especificadas en la
- *    máscara de bits flags.
- *  - El área comprendida entre 0x3007E00-0x3007FFF se se altera.
- *
- * @param flags: Máscara formada con las constantes RESET_X
- *
- * Bugs:
- * - Los LSBs de SIODATA siempre se destruyen, aunque no se fije el bit 5
- * - Siempre pone la pantalla en blanco porque se inicializa DISPCNT a 0x0080
+ * Function 0x01:
+ * Register RAM reset.
+ *  - Clears the I / O registers and memory zones specified in the
+ *    Mask bits flags.
+ *  - The area between 0x3007E00-0x3007FFF is changed.
+ * @param flags: Mask formed with constants RESET_X
+ * Bugs:
+ * - SIODATA LSBs are always destroyed, even if bit 5 is not set
+ * - Always set the screen blank because DISPCNT is initialized to 0x0080
  */
 extern void gba_register_ram_reset(int flags);
 
 /*****************************************************************************/
 
 /*
- * Función 0x02:
- * Halt.
- *  - Cambia la CPU al modo de bajo consumo, pero el resto de circuitos
- *    (video, sonido, serie, etc.) siguen funcionando.
- *  - Se sale de este modo cuando se produce una IRQ (deben estar habilitadas)
+ * Function 0x02:
+ * Halt.
+ *  - Changes the CPU to the low power mode, but the other circuits
+ *    (Video, sound, series, etc.) continue to function.
+ *  - Exits this way when an IRQ occurs (must be enabled)
  */
 extern void gba_halt(void);
 
 /*****************************************************************************/
 
 /*
- * Función 0x03:
- * Stop.
- *
- * - Cambia la GBA al modo de muy bajo consumo. Se detiene la CPU, el reloj,
- *   el sonido, el vídeo el reloj del SIO, los DMAs y temporizadores
- * - Sólo se sale de este estado si se recibe una interrupción del teclado,
- *   el cartucho, o el puerto serie
- * - Preparación antes de llamara la función stop:
- *     - Hay que deshabilitar el vídeo. De no hacerlo, se congela la imagen,
- *       pero se sigue gastando batería
+ * Function 0x03:
+ * Stop.
+ * - It changes the GBA to very low consumption mode. It stops the CPU, the clock,
+ *   Sound, video, WIS clock, DMAs and timers
+ * - You only get out of this state if a keyboard interrupt is received,
+ *   The cartridge, or the serial port
+ * - Preparation before calling the stop function:
+ *     - Disable the video. If not, the image freezes,
+ *       But battery is still running
  */
 extern void gba_stop(void);
 
 /*****************************************************************************/
 
 /*
- * Función 0x06:
- * División entera.
- * Retorna la parte entera de la división.
- * @param numerator   Numerador   (32 bits con signo)
- * @param denominator Denominador (32 bits con signo)
+ * Function 0x06:
+ * Whole division
+ * Returns the integer part of the division.
+ * @param numerator Numerator (32 bit signed)
+ * @param denominator Denominator (32 bits with sign)
  */
 extern int gba_div(int numerator, int denominator);
 
 /*****************************************************************************/
 
 /*
- * Función 0x06:
- * Resto de la división entera.
- * Retorna el resto de la división.
- * @param numerator   Numerador   (32 bits con signo)
- * @param denominator Denominador (32 bits con signo)
+ * Function 0x06:
+ * Rest of the entire division.
+ * Returns the rest of the division.
+ * @param numerator Numerator (32 bit signed)
+ * @param denominator Denominator (32 bits with sign)
  */
 extern int gba_mod(int numerator, int denominator);
 
 /*****************************************************************************/
 
 /*
- * Función 0x06:
- * División entera.
- * Retorna el valor absoluto de la parte entera de la división.
- * @param numerator   Numerador   (32 bits con signo)
- * @param denominator Denominador (32 bits con signo)
+ * Function 0x06:
+ * Whole division
+ * Returns the absolute value of the integer part of the division.
+ * @param numerator Numerator (32 bit signed)
+ * @param denominator Denominator (32 bits with sign)
  */
 extern int gba_abs_div(int numerator, int denominator);
 
 /*****************************************************************************/
 
 /*
- * Función 0x08:
- * Raiz cuadrada.
- * @param val Valor (32 bits sin signo)
- * @return La raiz cuadrada de val (16 bits sin signo). El resultado es entero.
- *         Se aconseja desplazar el valor a la izquierda 2*N bits para obtener
- *         el resultado N bits desplazado a la izquierda.
- */          
-extern u_int gba_sqrt(u_int val);
-
+ * Function 0x08:
+ * Square root.
+ * @param val Value (32 bit unsigned)
+ * @return The square root of val (16 bit unsigned). The result is whole.
+ *         It is advisable to shift the value to the left 2 * N bits to get
+ *         The result N bits shifted to the left.
+ */
 /*****************************************************************************/
 
 /*
- * Función 0xff:
- * Imprime una cadena de caracteres en la consola del depurador. Sólo funciona
- * en el simulador Visualboy Advance, si se realiza en la consola, la deja
- * colgada.
- * @param str  Puntero a la cadena
+ * Function 0xff:
+ * Prints a string of characters in the debugger console. Only works
+ * In the Visualboy Advance simulator, if done in the console, leaves it
+ * Hung up
+ * @param str String pointer
  */
 extern void gba_vba_print(const char *str);
 

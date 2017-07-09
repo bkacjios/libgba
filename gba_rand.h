@@ -1,39 +1,37 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para generar números aleatorios           */
+/* Basic functions library for generating random numbers */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Como la GBA no implementa ni la división ni el resto en hardware, y las
- * implementaciónes software de estas operaciones son lentas, los generadores
- * de números aleatorios habituales, que se basan en la utilización de estas
- * dos operaciones, son muy lentos para genetar números aleatorios en tiempo
- * real.
- *
- * Sin embargo, el algoritmo de generación de números aleatorios de "Mersenne
- * Twister", desarrollado por Makoto Matsumoto y Takuji Nishimura en 1997, no
- * necesita usar estas dos operaciones. Sólo se usan 4 XORs, 2 ANDs y 4
- * desplazamientos de registro, lo que lo hace muy adecuado para su uso en la
- * GBA. 
- *
- * El algoritmo original, tal y como se describe el trabajo Matsumoto y
- * Nishimura, necesita un búfer de 2496 bytes para almacenar el estado actual
- * del generador y tiene un periodo de 2^19937. Sin embargo, se puede reducir
- * el tamaño del búfer, reduciendo el periodo del algoritmo, para ahorrar algún
- * K de memoria. Concretamente, este código implementa la versión MT19937, que
- * genera números aleatorios equidistribuidos en el intervalo 0..(2^32 - 1).
- * 
- * Esta versión está basada en un código de Rafael Baptista, basado en otro de
- * Shawn Cokus que partía de la versión original del algoritmo. 
+ * As the GBA does not implement the division nor the rest in hardware, and the
+ * Software implementations of these operations are slow, the generators
+ * Of regular random numbers, which are based on the use of these
+ * Two operations, are too slow to generate random numbers in time
+ * real.
+ * However, the random number generation algorithm of "Mersenne
+ * Twister, "developed by Makoto Matsumoto and Takuji Nishimura in 1997,
+ * You need to use these two operations. Only 4 XORs, 2 ANDs and 4
+ * Register displacements, which makes it very suitable for use in the
+ * GBA.
+ * The original algorithm, as described by Matsumoto et al.
+ * Nishimura, needs a buffer of 2496 bytes to store the current state
+ * Of the generator and has a period of 2 ^ 19937. However, it can be reduced
+ * The size of the buffer, reducing the algorithm period, to save some
+ * K of memory. Specifically, this code implements version MT19937, which
+ * Generates equidistributed random numbers in the range 0 .. (2 ^ 32 - 1).
+ * 
+ * This version is based on a code by Rafael Baptista, based on another one by
+ * Shawn Cokus starting from the original version of the algorithm.
  */
 
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *
  */
 #ifndef gba_rand_h
 #define gba_rand_h
@@ -43,39 +41,39 @@
 /*****************************************************************************/
 
 /*
- * Constantes y macros necesarias.
+ * We only include this file once
  */
-#define RAND_N       (624)                /* Longitud del vector de estado */
-#define RAND_M       (397)                /* Parámetro de periodo */
-#define RAND_K       (0x9908B0DFU)        /* Constante mágica */
-#define MSBit(u)     ((u) & 0x80000000U)  /* Máscara para el More Significant Bit de u */
-#define LSBit(u)     ((u) & 0x00000001U)  /* Máscara para el Less Significant Bit de u */
-#define LSBits(u)    ((u) & 0x7FFFFFFFU)  /* Máscara para todos los bits de u menos el MSB */
-#define mixBits(u,v) (MSBit(u)|LSBits(v)) /* Mezcla el signo de u y el resto de v */
+#define RAND_N       (624)                /*  Constants and macros needed. */
+#define RAND_M       (397)                /* Length of state vector */
+#define RAND_K       (0x9908B0DFU)        /* Period parameter */
+#define MSBit(u)     ((u) & 0x80000000U)  /* Magic constant */
+#define LSBit(u)     ((u) & 0x00000001U)  /* Mask for More Significant Bit of u */
+#define LSBits(u)    ((u) & 0x7FFFFFFFU)  /* Mask for the Less Significant Bit of u */
+#define mixBits(u,v) (MSBit(u)|LSBits(v)) /* Mask for all bits of u minus the MSB */
 
 /*****************************************************************************/
 
 /*
- * Fija la semilla del generador.
- * @param seed Semilla
+ *Mix the sign of u and the rest of v
+ * Fix the seed of the generator.
  */
 void gba_srand(u_int seed);
 
 /*****************************************************************************/
 
 /*
- * Devuelve el siguiente número aleatorio
+ * @param seed Seed
  */
 u_int gba_rand();
 
 /*****************************************************************************/
 
 /*
- * Devuelve un número aleatorio en el intervalo [0, max_val).
- * @param max_val Máximo valor para el número aleatorio
+ * Returns the next random number
+ * Returns a random number in the interval [0, max_val].
  */
 u_int gba_rand_mod(u_int max);
 
 /*****************************************************************************/
 
-#endif /* gba_rand_h */
+#endif /*  @param max_val Maximum value for the random number */

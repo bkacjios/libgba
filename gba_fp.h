@@ -1,18 +1,18 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para operar en coma fija                  */
+/* Basic functions library for fixed-point operation */
 /*                                                                           */
-/* Formato utilizado: SEEEEEEEFFFFFFFF                                       */
-/*  - 1 bit de signo (bit 15),                                               */
-/*  - 7 de parte entera (bits 8-14),                                         */
-/*  - 8 de parte fraccionaria (bits 0-7).                                    */
+/* Format used: SEEEEEEEFFFFFFFF */
+/*   - 1 sign bit (bit 15), */
+/*   - 7 of integer part (bits 8-14), */
+/*   - 8 fractional part (bits 0-7). */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *  We only include this file once
  */
 #ifndef gba_fp_h
 #define gba_fp_h
@@ -22,7 +22,7 @@
 /*****************************************************************************/
 
 /*
- * Macros para la conversión de tipos desde y hacia fixed_p
+ *  Macros for type conversion from and to fixed_p
  */
 #define I2FP(i)               ((fixed_p) (((int) i) << 8))
 #define FP2I(fp)              ((signed int) (((fixed_p) fp) >> 8))
@@ -32,52 +32,52 @@
 /*****************************************************************************/
 
 /*
- * Suma dos números en coma fija
- * @param a Primer número
- * @param b Segundo número
+ *  Add two fixed-point numbers
+ *  @param a First number
+ *  @param b Second number
  */
 inline fixed_p gba_fp_add(fixed_p a, fixed_p b);
 
 /*****************************************************************************/
 
 /*
- * Resta dos números en coma fija
- * @param a Primer número
- * @param b Segundo número
+ *  Subtract two fixed-point numbers
+ *  @param a First number
+ *  @param b Second number
  */
 inline fixed_p gba_fp_sub(fixed_p a, fixed_p b);
 
 /*****************************************************************************/
 
 /*
- * Multiplica dos números en coma fija
- * @param a Primer número
- * @param b Segundo número
+ *  Multiply two numbers in fixed comma
+ *  @param a First number
+ *  @param b Second number
  */
 inline fixed_p gba_fp_mult(fixed_p a, fixed_p b);
 
 /*****************************************************************************/
 
 /*
- * Divide dos números en coma fija
- * @param a Primer número
- * @param b Segundo número
+ *  Divide two numbers into fixed commas
+ *  @param a First number
+ *  @param b Second number
  */
 inline fixed_p gba_fp_div(fixed_p a, fixed_p b);
 
 /*****************************************************************************/
 
 /*
- * Retorna el seno de un ángulo
- * @param ang Angulo
+ *  Returns the sine of an angle
+ *  @param ang angulo
  */
 inline fixed_p gba_fp_sin(signed int ang);
 
 /*****************************************************************************/
 
 /*
- * Retorna el coseno de un ángulo
- * @param ang Angulo
+ *  Returns the cosine of an angle
+ *  @param ang angulo
  */
 inline fixed_p gba_fp_cos(signed int ang);
 

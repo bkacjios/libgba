@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para operar en coma fija                  */
+/* Basic functions library for fixed-point operation */
 /*                                                                           */
-/* Formato utilizado: SEEEEEEEFFFFFFFF                                       */
-/*  - 1 bit de signo (bit 15),                                               */
-/*  - 7 de parte entera (bits 8-14),                                         */
-/*  - 8 de parte fraccionaria (bits 0-7).                                    */
+/* Format used: SEEEEEEEFFFFFFFF */
+/*  - 1 sign bit (bit 15), */
+/*  - 7 of integer part (bits 8-14), */
+/*  - 8 fractional part (bits 0-7). */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -17,8 +17,8 @@
 /*****************************************************************************/
 
 /*
- * LUT para acelerar el cálculo del seno en coma fija.
- * Precalculada como fp_sin[n] = ftofp( sin(n*M_PI/180) );
+ * LUT to accelerate the calculation of the sinus in fixed coma.
+ * Precalculated as fp_sin [n] = ftofp (sin (n * M_PI / 180));
  */
 const fixed_p gba_fp_sin_lut[360] = {
 0x0000,0x0004,0x0008,0x000d,0x0011,0x0016,0x001a,0x001f,
@@ -69,8 +69,8 @@ const fixed_p gba_fp_sin_lut[360] = {
 };
 
 /*
- * LUT para acelerar el cálculo del seno en coma fija.
- * Precalculada como fp_cos[n] = ftofp( cos(n*M_PI/180) );
+ * LUT to accelerate the calculation of the sinus in fixed coma.
+ * Precalculated as fp_cos [n] = ftofp (cos (n * M_PI / 180));
  */
 const fixed_p gba_fp_cos_lut[360] = {
 0x0100,0x00ff,0x00ff,0x00ff,0x00ff,0x00ff,0x00fe,0x00fe,
@@ -123,9 +123,9 @@ const fixed_p gba_fp_cos_lut[360] = {
 /*****************************************************************************/
 
 /*
- * Suma dos números en coma fija
- * @param a Primer número
- * @param b Segundo número
+ * Add two fixed-point numbers
+ * @param a First number
+ * @param b Second number
  */
 inline fixed_p gba_fp_add(fixed_p a, fixed_p b)
 {
@@ -135,9 +135,9 @@ inline fixed_p gba_fp_add(fixed_p a, fixed_p b)
 /*****************************************************************************/
 
 /*
- * Resta dos números en coma fija
- * @param a Primer número
- * @param b Segundo número
+ * Subtract two fixed-point numbers
+ * @param a First number
+ * @param b Second number
  */
 inline fixed_p gba_fp_sub(fixed_p a, fixed_p b)
 {
@@ -147,9 +147,9 @@ inline fixed_p gba_fp_sub(fixed_p a, fixed_p b)
 /*****************************************************************************/
 
 /*
- * Multiplica dos números en coma fija
- * @param a Primer número
- * @param b Segundo número
+ * Multiply two numbers in fixed comma
+ * @param a First number
+ * @param b Second number
  */
 inline fixed_p gba_fp_mult(fixed_p a, fixed_p b)
 {
@@ -159,9 +159,9 @@ inline fixed_p gba_fp_mult(fixed_p a, fixed_p b)
 /*****************************************************************************/
 
 /*
- * Divide dos números en coma fija
- * @param a Primer número
- * @param b Segundo número
+ * Divide two numbers into fixed commas
+ * @param a First number
+ * @param b Second number
  */
 inline fixed_p gba_fp_div(fixed_p a, fixed_p b)
 {
@@ -171,8 +171,8 @@ inline fixed_p gba_fp_div(fixed_p a, fixed_p b)
 /*****************************************************************************/
 
 /*
- * Retorna el seno de un ángulo
- * @param ang Angulo
+ * Returns the sine of an angle
+ * @param ang angulo
  */
 inline fixed_p gba_fp_sin(signed int ang)
 {
@@ -187,8 +187,8 @@ inline fixed_p gba_fp_sin(signed int ang)
 /*****************************************************************************/
 
 /*
- * Retorna el coseno de un ángulo
- * @param ang Angulo
+ * Returns the cosine of an angle
+ * @param ang angulo
  */
 inline fixed_p gba_fp_cos(signed int ang)
 {

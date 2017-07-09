@@ -1,19 +1,19 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Constantes útiles para el manejo del procesador de la GBA                 */
+/* Useful constants for GBA processor handling */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *  We only include this file once
  */
 #ifndef arm_h
 #define arm_h
 
 /*****************************************************************************/
-/* Modos de ejecución y bits de estado                                       */
+/* Execution modes and status bits */
 /*****************************************************************************/
 
 #define     ARM_MODE_USER       0x10

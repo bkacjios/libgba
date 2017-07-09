@@ -1,8 +1,8 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para manejar los botones en la GBA        */
+/* Basic functions library for handling the buttons in the GBA */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -11,7 +11,7 @@
 /*****************************************************************************/
 
 /*
- * Retorna el estatus de los botones (0 -> pulsado)
+ *  Returns the status of the buttons (0 -> pressed)
  */
 inline short gba_keypad_getstatus()
 {
@@ -21,8 +21,8 @@ inline short gba_keypad_getstatus()
 /*****************************************************************************/
 
 /*
- * Retorna 0 si alguno de los botones seleccionados en la máscara está pulsado.
- * @param masc   Máscara para seleccionar los botones
+ *  Returns 0 if any of the selected buttons on the mask are pressed.
+ *  @param masc Mask to select buttons
  */
 inline short gba_keypad_released(short masc)
 {
@@ -32,9 +32,9 @@ inline short gba_keypad_released(short masc)
 /*****************************************************************************/
 
 /*
- * Retorna 0 si ninguno de los botones seleccionados en la máscara está pulsado.
- * @param status Estado de los botones
- * @param masc   Máscara para seleccionar los botones
+ *  Returns 0 if none of the selected buttons on the mask are pressed.
+ *  @param status Button status
+ *  @param masc Mask to select buttons
  */
 inline short gba_keypad_pressed(short masc)
 {

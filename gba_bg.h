@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas de vídeo                                  */
+/* Basic video library functions */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ * We only include this file once
  */
 #ifndef gba_bg_h
 #define gba_bg_h
@@ -17,7 +17,7 @@
 /*****************************************************************************/
 
 /*
- * Identificadores de los modos de gestionar los fondos
+ * Identifiers of ways to manage funds
  */
 #define BG_MODE0               0
 #define BG_MODE1               1
@@ -27,7 +27,7 @@
 #define BG_MODE5               5
 
 /*
- * Identificadores de los fondos
+ * Identifiers of funds
  */
 #define BG0                    0
 #define BG1                    1
@@ -35,13 +35,13 @@
 #define BG3                    3
 
 /*
- * Modos de color
+ * Color Modes
  */
 #define BG_COLOR16             VIDEO_BG_COLOR16
 #define BG_COLOR256            VIDEO_BG_COLOR256
 
 /*
- * Tamaños en pixels para los fondos de texto sin rotación
+ * Sizes in pixels for text backgrounds without rotation
  */
 #define BG_SIZE_TEXT_256x256   VIDEO_BG_SIZE_TEXT_256x256
 #define BG_SIZE_TEXT_512x256   VIDEO_BG_SIZE_TEXT_512x256
@@ -56,60 +56,60 @@
 /*****************************************************************************/
 
 /*
- * Estructura de datos para manejar fondos
+ * Data structure for managing funds
  */
 typedef struct
 {
-  short      mask;         /* Máscara en DISPCNT (VIDEO_BG0, ..., VIDEO_BG3) */
-  gba_word16 BGCNT;        /* Puntero al registro de control */
-  gba_word16 BGHOFS;       /* Puntero al registro de desplazamiento horizontal */
-  gba_word16 BGVOFS;       /* Puntero al registro de desplazamiento vertical */
-  gba_word16 BGPA;         /* Puntero al registro PA (sólo para los fondos de rotación) */
-  gba_word16 BGPB;         /* Puntero al registro PB (sólo para los fondos de rotación) */
-  gba_word16 BGPC;         /* Puntero al registro PC (sólo para los fondos de rotación) */
-  gba_word16 BGPD;         /* Puntero al registro PD (sólo para los fondos de rotación) */
-  gba_word32 BGX;          /* Puntero a la coordenada x del punto de referencia (sólo para los fondos de rotación) */
-  gba_word32 BGY;          /* Puntero a la coordenada y del punto de referencia (sólo para los fondos de rotación) */
-  short      char_block;   /* Bloque para almacenar los caracteres */
-  short      screen_block; /* Bloque para almacenar el mapa que define el fondo */
-  short      ofs_h;        /* Desplazamiento horizontal */
-  short      ofs_v;        /* Desplazamiento vertical */
-  short      width;        /* Ancho en pixels */
-  short      height;       /* Alto en pixels */
-  fixed_p    scale_h;      /* Factor de escalado horizontal*/
-  fixed_p    scale_v;      /* Factor de escalado vertical */
-  int        rot_angle;    /* Angulo de rotación en grados */
-  int        rot_x;        /* Punto de referencia para la rotación - x */
-  int        rot_y;        /* Punto de referencia para la rotación - y */
+  short      mask;         /* Mask in DISPCNT (VIDEO_BG0, ..., VIDEO_BG3) */
+  gba_word16 BGCNT;        /* Pointer to control register */
+  gba_word16 BGHOFS;       /* Pointer to horizontal shift register */
+  gba_word16 BGVOFS;       /* Pointer to vertical scroll register */
+  gba_word16 BGPA;         /* Pointer to PA record (only for rotation backgrounds) */
+  gba_word16 BGPB;         /* Pointer to PB record (only for rotation backgrounds) */
+  gba_word16 BGPC;         /* Pointer to PC record (only for rotating backgrounds) */
+  gba_word16 BGPD;         /* Pointer to PD record (only for rotation backgrounds) */
+  gba_word32 BGX;          /* Pointer to the x-coordinate of the reference point (only for rotation backgrounds) */
+  gba_word32 BGY;          /* Pointer to the coordinate and the reference point (only for rotation backgrounds) */
+  short      char_block;   /* Block for storing characters */
+  short      screen_block; /* Block to store the map that defines the background */
+  short      ofs_h;        /* Horizontal shift */
+  short      ofs_v;        /* Vertical displacement */
+  short      width;        /* Width in pixels */
+  short      height;       /* High in pixels */
+  fixed_p    scale_h;      /* Horizontal scaling factor */
+  fixed_p    scale_v;      /* Vertical scaling factor */
+  int        rot_angle;    /* Angle of rotation in degrees */
+  int        rot_x;        /* Reference point for rotation - x */
+  int        rot_y;        /* Reference point for rotation - y */
 } bg_struct;
 
 /*****************************************************************************/
 
 /*
- * Función que retorna el modo de los fondos.
+ * Function that returns the backgrounds mode.
  */
 inline short gba_bg_get_mode(void);
 
 /*****************************************************************************/
 
 /*
- * Función para fijar el modo de los fondos.
- * @param mode Modo (BG_MODE0, BG_MODE1, BG_MODE2, BG_MODE3, BG_MODE4, BG_MODE5)
+ * Function to set the mode of the backgrounds.
+ * @param mode (BG_MODE0, BG_MODE1, BG_MODE2, BG_MODE3, BG_MODE4, BG_MODE5)
  */
 void gba_bg_set_mode(u_char mode);
 
 /*****************************************************************************/
 
 /*
- * Función para inicializar un fondo en modo texto.
- * @param id           Identificador (BG0, BG1, BG2, BG3)
- * @param color        Configuración del color (BG_COLOR16 o BG_COLOR256)
- * @param size         Tamaño del fondo (BG_SIZE_X)
- * @param char_block   Bloque para almacenar los caracteres (0-3)
- * @param screen_block Bloque para almacenar el mapa que define el fondo (0-31)
- * @param sizeof_chars Tamaño del buffer de caracteres en bytes
- * @param chars        Puntero al buffer de caracteres
- * @param map          Puntero al buffer que almacena al mapa
+ * Function to initialize a background in text mode.
+ * @param id Identifier (BG0, BG1, BG2, BG3)
+ * @param color Color setting (BG_COLOR16 or BG_COLOR256)
+ * @param size Background size (BG_SIZE_X)
+ * @param char_block Block to store characters (0-3)
+ * @param screen_block Block to store the map that defines the background (0-31)
+ * @param sizeof_chars Character buffer size in bytes
+ * @param chars Character buffer pointer
+ * @param map Pointer to the buffer that stores the map
  */
 void gba_bg_init_text(short id, short color, short size,
                       short char_block, short screen_block,
@@ -118,100 +118,100 @@ void gba_bg_init_text(short id, short color, short size,
 /*****************************************************************************/
 
 /*
- * Función para inicializar el frontbuffer en modo bitmap (BG2, modos 3-5).
- * @param bitmap Puntero al buffer de pixels
+ * Function to initialize the frontbuffer in bitmap mode (BG2, modes 3-5).
+ * @param bitmap Pixel buffer pointer
  */
 void gba_bg_init_front_buffer(const void* bitmap);
 
 /*****************************************************************************/
 
 /*
- * Función para inicializar el backbuffer en modo bitmap (BG2, modos 4-5).
- * @param bitmap Puntero al buffer de pixels
+ * Function to initialize the backbuffer in bitmap mode (BG2, modes 4-5).
+ * @param bitmap Pixel buffer pointer
  */
 void gba_bg_init_back_buffer(const void* bitmap);
 
 /*****************************************************************************/
 
 /*
- * Iniciliza una paleta de 256 colores para el fondo.
- * @param palette La paleta
+ * Initialize a palette of 256 colors for the background.
+ * @param palette The palette
  */
 inline void gba_bg_init_palette256(const void * palette);
 
 /*****************************************************************************/
 
 /*
- * Iniciliza una de las 16 paletas de 16 colores para el fondo.
- * @param index   Indice de la paleta (0..15)
- * @param palette La paleta
+ * Initialize one of 16 16-color palettes for the background.
+ * @param index Palette index (0..15)
+ * @param palette The palette
  */
 inline void gba_bg_init_palette16(short index, const void * palette);
 
 /*****************************************************************************/
 
 /*
- * Muestra un fondo.
- * @param id Identificador (BG0, BG1, BG2, BG3)
+ * It shows a background.
+ * @param id Identifier (BG0, BG1, BG2, BG3)
  */
 inline void gba_bg_show(short id);
 
 /*****************************************************************************/
 
 /*
- * Oculta un fondo.
- * @param id Identificador (BG0, BG1, BG2, BG3)
+ * Hides a background.
+ * @param id Identifier (BG0, BG1, BG2, BG3)
  */
 inline void gba_bg_hide(short id);
 
 /*****************************************************************************/
 
 /*
- * Retorna el ancho en pixels de un fondo
- * @param id Identificador (BG0, BG1, BG2, BG3)
+ * Returns the width in pixels of a background
+ * @param id Identifier (BG0, BG1, BG2, BG3)
  */
 inline short gba_bg_width(short id);
 
 /*****************************************************************************/
 
 /*
- * Retorna el alto en pixels de un fondo
- * @param id Identificador (BG0, BG1, BG2, BG3)
+ * Returns the height in pixels of a background
+ * @param id Identifier (BG0, BG1, BG2, BG3)
  */
 inline short gba_bg_height(short id);
 
 /*****************************************************************************/
 
 /*
- * Fija el tamaño de los pixels de los fondos en modo mosaico.
- * @param h_size Tamaño horizontal del mosaico de los fondos (1-16)
- * @param v_size Tamaño vertical del mosaico de los fondos (1-16)
+ * Sets the pixel size of the backgrounds in mosaic mode.
+ * @param h_size Horizontal mosaic size of backgrounds (1-16)
+ * @param v_size Vertical mosaic size of backgrounds (1-16)
  */
 inline void gba_bg_set_mosaic_size(short h_size, short v_size);
 
 /*****************************************************************************/
 
 /*
- * Habilita el modo mosaico en un fondo.
- * @param id Identificador (BG0, BG1, BG2, BG3)
+ * Enables mosaic mode on a background.
+ * @param id Identifier (BG0, BG1, BG2, BG3)
  */
 inline void gba_bg_enable_mosaic(short id);
 
 /*****************************************************************************/
 
 /*
- * Deshabilita el modo mosaico en un fondo.
- * @param id Identificador (BG0, BG1, BG2, BG3)
+ * Disables mosaic mode in a background.
+ * @param id Identifier (BG0, BG1, BG2, BG3)
  */
 inline void gba_bg_disable_mosaic(short id);
 
 /*****************************************************************************/
 
 /*
- * Función para aplicar desplazamiento hardware a los fondos.
- * @param bg Puntero al fondo
- * @param dx Desplazamiento horizontal
- * @param dy Desplazamiento vertical
+ * Function to apply hardware shift to backgrounds.
+ * @param bg Pointer in the background
+ * @param dx Horizontal shift
+ * @param dy Vertical scrolling
  */
 inline void gba_bg_scroll(short id, short dx, short dy);
 
@@ -219,53 +219,53 @@ inline void gba_bg_scroll(short id, short dx, short dy);
 
 
 /*
- * Función para actualizar los atributos de rotación/escalado.
- * @param id Identificador (BG2, BG3)
+ * Function to update the rotation / scaling attributes.
+ * @param id Identifier (BG2, BG3)
  */
 void gba_bg_update_rotation(short id);
 
 /*****************************************************************************/
 
 /*
- * Modifica el centro de rotación actual del fondo.
- * @param id Identificador (BG2, BG3)
- * @param dx Incremento/decremento horizontal
- * @param dy Incremento/decremento vertical
+ * Modifies the current rotation center of the fund.
+ * @param id Identifier (BG2, BG3)
+ * @param dx Horizontal increase / decrease
+ * @param dy Vertical increase / decrease
  */
 inline void gba_bg_move_rotation_center(short id, int dx, int dy);
 
 /*****************************************************************************/
 
 /*
- * Modifica el ángulo de rotación actual del fondo.
- * @param id     Identificador (BG2, BG3)
- * @param dangle Incremento/decremento al angulo actual de rotación
+ * Modifies the current rotation angle of the background.
+ * @param id Identifier (BG2, BG3)
+ * @param dangle Increment / decrease to current rotation angle
  */
 inline void gba_bg_rotate(short id, int dangle);
 
 /*****************************************************************************/
 
 /*
- * Modifica el escalado actual del fondo.
- * @param id       Identificador (BG2, BG3)
- * @param dscale_h Incremento/decremento escalado horizontal
- * @param dscale_v Incremento/decremento escalado vertical
+ * Modifies the current scaling of the background.
+ * @param id Identifier (BG2, BG3)
+ * @param dscale_h Horizontal scaling increment / decrement
+ * @param dscale_v Vertical scaling increment / decrement
  */
 inline void gba_bg_scale(short id, fixed_p dscale_h, fixed_p dscale_v);
 
 /*****************************************************************************/
 
 /*
- * Repite el fondo para llenar la pantalla.
- * @param id Identificador (BG2, BG3)
+ * Repeat the background to fill the screen.
+ * @param id Identifier (BG2, BG3)
  */
 inline void gba_bg_overflow_wraparound(short id);
 
 /*****************************************************************************/
 
 /*
- * Deja transparente la parte de pantalla que no ocupe un fondo de rotación.
- * @param id Identificador (BG2, BG3)
+ * It leaves transparent the part of screen that does not occupy a fund of rotation.
+ * @param id Identifier (BG2, BG3)
  */
 inline void gba_bg_overflow_transparent(short id);
 

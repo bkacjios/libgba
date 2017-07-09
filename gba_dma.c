@@ -1,8 +1,8 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para transferencias DMA                   */
+/* Basic Functions Library for DMA Transfers */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -11,49 +11,49 @@
 /*****************************************************************************/
 
 /*
- * Variables estáticas de la biblioteca
+ * Static library variables
  */
 
 dma_struct gba_dmas[4]=
 {
   /* DMA 0 */
   {
-    (gba_word32) &(gba_dma_regs.DMA0SAD),     /* Dirección fuente */
-    (gba_word32) &(gba_dma_regs.DMA0DAD),     /* Dirección de destino */
-    (gba_word16) &(gba_dma_regs.DMA0CNT_L),   /* Número de bloque a transmitir */
-    (gba_word16) &(gba_dma_regs.DMA0CNT_H)    /* Registro de control */
+    (gba_word32) &(gba_dma_regs.DMA0SAD),     /* Source address */
+    (gba_word32) &(gba_dma_regs.DMA0DAD),     /* Destination address */
+    (gba_word16) &(gba_dma_regs.DMA0CNT_L),   /* Block number to be transmitted */
+    (gba_word16) &(gba_dma_regs.DMA0CNT_H)    /* Control record */
   },
 
   /* DMA 1 */
   {
-    (gba_word32) &(gba_dma_regs.DMA1SAD),     /* Dirección fuente */
-    (gba_word32) &(gba_dma_regs.DMA1DAD),     /* Dirección de destino */
-    (gba_word16) &(gba_dma_regs.DMA1CNT_L),   /* Número de bloque a transmitir */
-    (gba_word16) &(gba_dma_regs.DMA1CNT_H)    /* Registro de control */
+    (gba_word32) &(gba_dma_regs.DMA1SAD),     /* Source address */
+    (gba_word32) &(gba_dma_regs.DMA1DAD),     /* Destination address */
+    (gba_word16) &(gba_dma_regs.DMA1CNT_L),   /* Block number to be transmitted */
+    (gba_word16) &(gba_dma_regs.DMA1CNT_H)    /* Control record */
   },
 
   /* DMA 2 */
   {
-    (gba_word32) &(gba_dma_regs.DMA2SAD),     /* Dirección fuente */
-    (gba_word32) &(gba_dma_regs.DMA2DAD),     /* Dirección de destino */
-    (gba_word16) &(gba_dma_regs.DMA2CNT_L),   /* Número de bloque a transmitir */
-    (gba_word16) &(gba_dma_regs.DMA2CNT_H)    /* Registro de control */
+    (gba_word32) &(gba_dma_regs.DMA2SAD),     /* Source address */
+    (gba_word32) &(gba_dma_regs.DMA2DAD),     /* Destination address */
+    (gba_word16) &(gba_dma_regs.DMA2CNT_L),   /* Block number to be transmitted */
+    (gba_word16) &(gba_dma_regs.DMA2CNT_H)    /* Control record */
   },
 
   /* DMA 3 */
   {
-    (gba_word32) &(gba_dma_regs.DMA3SAD),     /* Dirección fuente */
-    (gba_word32) &(gba_dma_regs.DMA3DAD),     /* Dirección de destino */
-    (gba_word16) &(gba_dma_regs.DMA3CNT_L),   /* Número de bloque a transmitir */
-    (gba_word16) &(gba_dma_regs.DMA3CNT_H)    /* Registro de control */
+    (gba_word32) &(gba_dma_regs.DMA3SAD),     /* Source address */
+    (gba_word32) &(gba_dma_regs.DMA3DAD),     /* Destination address */
+    (gba_word16) &(gba_dma_regs.DMA3CNT_L),   /* Block number to be transmitted */
+    (gba_word16) &(gba_dma_regs.DMA3CNT_H)    /* Control record */
   }
 };
 
 /*****************************************************************************/
 
 /*
- * Habilita el canal de DMA.
- * @param channel Número de canal
+ * Enables the DMA channel.
+ * @param channel Channel number
  */
 inline void gba_dma_enable(u_char channel)
 {
@@ -63,8 +63,8 @@ inline void gba_dma_enable(u_char channel)
 /*****************************************************************************/
 
 /*
- * Deshabilita el canal de DMA
- * @param channel Número de canal
+ * Disables the DMA channel
+ * @param channel Channel number
  */
 inline void gba_dma_disable(u_char channel)
 {
@@ -74,12 +74,12 @@ inline void gba_dma_disable(u_char channel)
 /*****************************************************************************/
 
 /*
- * Copia un área de memoria mediante el canal DMA3 en bloques de 32 bits, por
- * lo tanto, LAS DIRECCIONES DEBEN ESTAR ALINEADAS A UNA FRONTERA DE 32 BITS
- * @param channel Número de canal
- * @param dest    Dirección de destino
- * @param source  Dirección de origen
- * @param size    Tamaño en bytes de la transferencia
+ * Copies an area of ​​memory through the DMA3 channel in blocks of 32 bits, for
+ * Therefore, ADDRESSES SHOULD BE ALIGNED TO A 32 BIT BORDER
+ * @param channel Channel number
+ * @param dest Destination address
+ * @param source Source address
+ * @param size Size in bytes of the transfer
  */
 inline void gba_dma_memcpy(void* dest, const void* source, u_int size)
 {
@@ -96,10 +96,10 @@ inline void gba_dma_memcpy(void* dest, const void* source, u_int size)
 /*****************************************************************************/
 
 /*
- * Inicializa una transferencia de sonido directo.
- * @param channel Canal (sólo DMA1 y DMA2)
- * @param fifo    Cola FIFO del canal de sonido
- * @param buffer  Buffer con las muestras de sonido
+ * Initializes a direct sound transfer.
+ * @param channel (only DMA1 and DMA2)
+ * @param FIFO Cola FIFO channel sound
+ * @param Buffer buffer with sound samples
  */
 inline void gba_dma_sound_init(u_char channel, void* fifo, const void* buffer)
 {

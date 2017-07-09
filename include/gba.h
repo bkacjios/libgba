@@ -1,27 +1,27 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Constantes utiles para el manejo de la GBA                                */
+/* Constants useful for the management of GBA */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ *  We only include this file once
  */
 #ifndef gba_h
 #define gba_h
 
 /*****************************************************************************/
-/* Tipos de datos                                                            */
+/* Type of data */
 /*****************************************************************************/
 
-typedef volatile short * gba_word16;       /* Palabra de memoria de 16 bits */
-typedef volatile int   * gba_word32;       /* Palabra de memoria de 32 bits */
+typedef volatile short * gba_word16;       /* 16-bit memory word */
+typedef volatile int   * gba_word32;       /* 32-bit memory word */
 
 
 /*****************************************************************************/
-/* Procesador                                                                */
+/* Processor */
 /*****************************************************************************/
 
 #include "arm.h"
@@ -30,26 +30,26 @@ typedef volatile int   * gba_word32;       /* Palabra de memoria de 32 bits */
 
 
 /*****************************************************************************/
-/* Mapa de memoria                                                           */
+/* Memory map */
 /*****************************************************************************/
 
-#include "palette.h"   /* Memoria para la paleta de colores */
+#include "palette.h"   /* Memory for color palette */
 #include "vram.h"      /* VRAM */
-#include "oam.h"       /* Memoria para los atributos de objetos */
+#include "oam.h"       /* Memory for object attributes */
 
 
 /*****************************************************************************/
-/* Periféricos                                                               */
+/* Peripherals */
 /*****************************************************************************/
 
-#include "video.h"     /* Controlador de vídeo */
-#include "gamepack.h"  /* Controlador de acceso al cartucho */
-#include "sound.h"     /* Controlador de sonido */
-#include "dma.h"       /* Controlador de DMA */
-#include "timer.h"     /* Temporizadores */
-#include "serial.h"    /* Puerto serie */
-#include "keypad.h"    /* Botones */
-#include "irq.h"       /* Controlador de interrupciones */
+#include "video.h"     /* Video controller */
+#include "gamepack.h"  /* Cartridge Access Controller */
+#include "sound.h"     /* Sound Controller */
+#include "dma.h"       /* DMA Controller */
+#include "timer.h"     /* Timers */
+#include "serial.h"    /* Serial Port */
+#include "keypad.h"    /* Buttons */
+#include "irq.h"       /* Interrupt Controller */
 
 /*****************************************************************************/
 

@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para transferencias DMA                   */
+/* Basic Functions Library for DMA Transfers */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ * We only include this file once
  */
 #ifndef gba_dma_h
 #define gba_dma_h
@@ -17,7 +17,7 @@
 /*****************************************************************************/
 
 /*
- * Identificadores de los canales de DMA
+ * DMA channel identifiers
  */
 #define DMA0               0
 #define DMA1               1
@@ -27,51 +27,51 @@
 /*****************************************************************************/
 
 /*
- * Estructura de datos para manejar los canales de DMA
+ * Data structure for handling DMA channels
  */
 typedef struct
 {
-  gba_word32 DMASAD;       /* Dirección fuente */
-  gba_word32 DMADAD;       /* Dirección de destino */
-  gba_word16 DMACNT_L;     /* Número de bloque a transmitir */
-  gba_word16 DMACNT_H;     /* Registro de control */
+  gba_word32 DMASAD;       /* Source address */
+  gba_word32 DMADAD;       /* Destination address */
+  gba_word16 DMACNT_L;     /* Block number to be transmitted */
+  gba_word16 DMACNT_H;     /* Control record */
 } dma_struct;
 
 /*****************************************************************************/
 
 /*
- * Habilita el canal de DMA.
- * @param channel Número de canal
+ * Enables the DMA channel.
+ * @param channel Channel number
  */
 inline void gba_dma_enable(u_char channel);
 
 /*****************************************************************************/
 
 /*
- * Deshabilita el canal de DMA
- * @param channel Número de canal
+ * Disables the DMA channel
+ * @param channel Channel number
  */
 inline void gba_dma_disable(u_char channel);
 
 /*****************************************************************************/
 
 /*
- * Copia un área de memoria mediante el canal DMA3 en bloques de 32 bits, por
- * lo tanto, LAS DIRECCIONES DEBEN ESTAR ALINEADAS A UNA FRONTERA DE 32 BITS
- * @param channel Número de canal
- * @param dest    Dirección de destino
- * @param source  Dirección de origen
- * @param size    Tamaño en bytes de la transferencia
+ * Copies an area of ​​memory through the DMA3 channel in blocks of 32 bits, for
+ * Therefore, ADDRESSES SHOULD BE ALIGNED TO A 32 BIT BORDER
+ * @param channel Channel number
+ * @param dest Destination address
+ * @param source Source address
+ * @param size Size in bytes of the transfer
  */
 inline void gba_dma_memcpy(void* dest, const void* source, u_int size);
 
 /*****************************************************************************/
 
 /*
- * Inicializa una transferencia de sonido directo.
- * @param channel Canal (sólo DMA1 y DMA2)
- * @param fifo    Cola FIFO del canal de sonido
- * @param buffer  Buffer con las muestras de sonido
+ * Initializes a direct sound transfer.
+ * @param channel (only DMA1 and DMA2)
+ * @param FIFO Cola FIFO channel sound
+ * @param Buffer buffer with sound samples
  */
 inline void gba_dma_sound_init(u_char channel, void* fifo, const void* buffer);
 

@@ -1,8 +1,8 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para manejar sprites                      */
+/* Basic functions library for handling sprites */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -16,61 +16,61 @@
 /*****************************************************************************/
 
 /*
- * Variables estáticas de la biblioteca
+ * Static library variables
  */
 
 /*
- * Copia de la OAM para modificar los sprites antes de refrescarlos
+ * Copy of the OAM to modify the sprites before refreshing them
  */
 gba_oam_struct gba_sprite_oam_shadow;
 
 /*
- * Entrada en la OAM para el proximo sprite que se cree
+ * Entry in the OAM for the next sprite that is believed
  */
 u_short gba_sprite_next_obj_entry = 0;
 
 /*
- * Desplazamiento en la memoria de caracteres para el proximo sprite
+ * Character memory shift for the next sprite
  */
 u_short gba_sprite_next_obj_name = 0;
 
 /*
- * Copia del registro MOSAIC. Es necesaria porque el registro MOSAIC no se
- * puede leer. Es de sólo escritura. Definida en gba_bg.c.
+ * Copy of MOSAIC record. This is necessary because MOSAIC registration is not
+ * can read. It's just writing. Defined in gba_bg.c.
  */
 extern short gba_bg_mosaic_shadow;
 
 /*****************************************************************************/
 
 /*
- * Configura el modo de almacenamiento de los sprites en la VRAM en 1 dimensión
- * e inicializa la OAM (oculta todos los sprites y fija los parámetros de rotación).
+ * Set the storage mode of the sprites in the VRAM in 1 dimension
+ * And initializes the OAM (hides all sprites and sets the rotation parameters).
  */
 inline void gba_oam_init()
 {
   int i;
 
-  /* Ocultamos los sprites */
+  /* We hide the sprites */
   for(i = 0; i < 128; i++)
   {
     gba_sprite_oam_shadow.obj[i].ATTRIBUTE[0] = SCREEN_HEIGHT;
     gba_sprite_oam_shadow.obj[i].ATTRIBUTE[1] = SCREEN_WIDTH;
   }
 
-  /* Fijamos todas las matrices de rotación a la matriz identidad en punto fijo */
+  /* We set all rotation matrices to the fixed-point identity matrix */
   for(i = 0; i < 32; i++)
   {
-    gba_sprite_oam_shadow.rotation[i].PA = I2FP(1); /* dx */
-    gba_sprite_oam_shadow.rotation[i].PC = I2FP(0); /* dy */
-    gba_sprite_oam_shadow.rotation[i].PB = I2FP(0); /* dmx */
-    gba_sprite_oam_shadow.rotation[i].PD = I2FP(1); /* dmy */
+    gba_sprite_oam_shadow.rotation[i].PA = I2FP(1); /* Dx */
+    gba_sprite_oam_shadow.rotation[i].PC = I2FP(0); /* Dy */
+    gba_sprite_oam_shadow.rotation[i].PB = I2FP(0); /* Dmx */
+    gba_sprite_oam_shadow.rotation[i].PD = I2FP(1); /* Dmy */
   }
 }
 
 /*****************************************************************************/
 
 /*
- * Refresca los sprites en la pantalla
+ * Refresh the sprites on the screen
  */
 inline void gba_oam_update(void)
 {
@@ -80,18 +80,18 @@ inline void gba_oam_update(void)
 /*****************************************************************************/
 
 /*
- * Función para habilitar los sprites.
+ * Function to enable the sprites.
  */
 inline void gba_sprite_enable()
 {
-  /* Los sprites se almacenan en 1D */
+  /* Sprites are stored in 1D */
   gba_video_regs.DISPCNT |= VIDEO_OBJ_MAP_1D | VIDEO_OBJ;
 }
 
 /*****************************************************************************/
 
 /*
- * Función para deshabilitar los sprites.
+ * Function to disable sprites.
  */
 inline void gba_sprite_disable()
 {
@@ -101,8 +101,8 @@ inline void gba_sprite_disable()
 /*****************************************************************************/
 
 /*
- * Iniciliza una paleta de 256 colores para los sprites.
- * @param palette La paleta
+ * Initialize a 256-color palette for sprites.
+ * @param palette The palette
  */
 inline void gba_sprite_init_palette256(const void * palette)
 {
@@ -112,9 +112,9 @@ inline void gba_sprite_init_palette256(const void * palette)
 /*****************************************************************************/
 
 /*
- * Iniciliza una de las 16 paletas de 16 colores para los sprites.
- * @param index   Indice de la paleta (0..15)
- * @param palette La paleta
+ * Initiate one of 16 16 color palettes for sprites.
+ * @param index Palette index (0..15)
+ * @param palette The palette
  */
 inline void gba_sprite_init_palette16(short index, const void * palette)
 {
@@ -124,12 +124,12 @@ inline void gba_sprite_init_palette16(short index, const void * palette)
 /*****************************************************************************/
 
 /*
- * Crea un nuevo sprite
- * @param sp    Puntero al sprite
- * @param size  Tamaño del sprite (SPRITE_SIZE_X)
- * @param color Formato del color (SPRITE_COLOR16, SPRITE_COLOR256)
- * @param data  Puntero al buffer que contiene los frames que definen el sprite
- * @return El sprite creado.
+ * Create a new sprite
+ * @param sp Pointer to sprite
+ * @param size Sprite size (SPRITE_SIZE_X)
+ * @param Color Color Format (SPRITE_COLOR16, SPRITE_COLOR256)
+ * @param data Pointer to the buffer containing the frames that define the sprite
+ * @return The sprite created.
  */
 void gba_sprite_new(sprite_struct * sp, short size, short color, const void *data)
 {
@@ -137,24 +137,24 @@ void gba_sprite_new(sprite_struct * sp, short size, short color, const void *dat
   short obj_shape = (size & 0x0003) << 14;
   
   /*
-   * Si la pantalla está en modo gráfico, sólo tenemos disponible la mitad de
-   * la memoria para los sprites
+   * If the screen is in graphic mode, only half of the screen is available.
+   * Memory for sprites
    */
   if (gba_sprite_next_obj_name==0 && (gba_bg_get_mode() & (BG_MODE3|BG_MODE4|BG_MODE5)))
     gba_sprite_next_obj_name = 512;
 
-  /* Inicializamos los campos del sprite */
-  sp->oam_entry = gba_sprite_next_obj_entry++; /* Entrada en la OAM */
-  sp->is_shown = FALSE;             /* Inicialmente está oculto */
-  sp->pos_x=0;                      /* Posición por defecto */
+  /* Initialize the sprite fields */
+  sp->oam_entry = gba_sprite_next_obj_entry++; /* Entry into the OAM */
+  sp->is_shown = FALSE;             /* Initially hidden */
+  sp->pos_x=0;                      /* Default position */
   sp->pos_y=0;
-  sp->scale_h=I2FP(1);              /* Escalado por defecto */
+  sp->scale_h=I2FP(1);              /* Scaling by default */
   sp->scale_v=I2FP(1);
-  sp->angle=0;                      /* Rotación por defecto */
-  sp->rotated=FALSE;                /* No se aplicado rotación/escalado */
+  sp->angle=0;                      /* Default Rotation */
+  sp->rotated=FALSE;                /* No rotation / scaling applied */
   sp->data = data;
   
-  /* Inicializamos el alto y el ancho */
+  /* Initialize height and width */
   switch (obj_shape)
   {
     case OBJ_SQUARE:
@@ -224,36 +224,36 @@ void gba_sprite_new(sprite_struct * sp, short size, short color, const void *dat
       break;
   }
 
-  /* En principio suponemos que sólo hay un frame */  
+  /* In principle we assume that there is only one frame */
   sp->frame_seq_len = 1;
   sp->frame_seq = NULL;
   sp->frame_index = 0;
 
-  /* Inicializamos sus atributos (pos_x y pos_y se fijan a 0) */
+  /* Initialize its attributes (pos_x and pos_y and set to 0) */
   gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[0] |= color | obj_shape;
   gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[1] |= obj_size;
   gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[2] |= gba_sprite_next_obj_name;
   
-  /* tamaño en pixels de la transferencia */
+  /* Size in transfer pixels */
   sp->frame_size = sp->width * sp->height;
 
-  /* tamaño de la transferencia en bytes */
+  /* Transfer size in bytes */
   if (color == SPRITE_COLOR16)
     sp->frame_size /= 2;
 
-  /* Copiamos los caracteres del primer frame al sprite */
+  /* Copy the characters from the first frame to the sprite */
   gba_dma_memcpy((void*)gba_vram.obj_data[gba_sprite_next_obj_name], data, sp->frame_size);
   
-  /* Fijamos el desplazamiento para el proximo sprite */
+  /* We set the offset for the next sprite */
   gba_sprite_next_obj_name += sp->frame_size/sizeof(gba_video_char16);
 }
 
 /*****************************************************************************/
 
 /*
- * Función para actualizar la posición, rotación y escalado de un sprite en la
- * OAM.
- * @param sp Puntero al sprite
+ * Function to update the position, rotation and scaling of a sprite in the
+ * OAM.
+ * @param sp Pointer to sprite
  */
 void gba_sprite_update(sprite_struct * sp)
 {
@@ -268,25 +268,25 @@ void gba_sprite_update(sprite_struct * sp)
     gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[0] &= 0xff00;
     gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[0] |= (sp->pos_y & 0x00ff);
     
-    /* Si se le ha aplicado alguna rotación/escalado */
+    /* If any rotation / scaling has been applied */
     if(sp->rotated)
     {
       sp->rotated = FALSE;
-      /* Desplazamiento en el eje x de la misma línea */
+      /* Displacement on the x-axis of the same line */
       dx = gba_fp_mult(sp->scale_h, gba_fp_cos(sp->angle));
 
-      /* Desplazamiento en el eje y de la misma línea */
+      /* Displacement on the y axis of the same line */
       dy = gba_fp_mult(sp->scale_h, -gba_fp_sin(sp->angle));
 
-      /* Desplazamiento en el eje x de la siguiente línea */
+      /* Displacement on the x-axis of the next line */
       dmx = gba_fp_mult(sp->scale_v, gba_fp_sin(sp->angle));
 
-      /* Desplazamiento en el eje y de la siguiente línea */
+      /* Offset on the y-axis of the next line */
       dmy = gba_fp_mult(sp->scale_v, gba_fp_cos(sp->angle));
 
       rot_index = (gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[1] & (31 << 9)) >> 9;
 
-      /* Actualizamos la OAM */
+      /* We update the OAM */
       gba_sprite_oam_shadow.rotation[rot_index].PA = dx;
       gba_sprite_oam_shadow.rotation[rot_index].PC = dy;
       gba_sprite_oam_shadow.rotation[rot_index].PB = dmx;
@@ -298,8 +298,8 @@ void gba_sprite_update(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Muestra un sprite.
- * @param sp  El sprite
+ * Show a sprite.
+ * @param sp The sprite
  */
 inline void gba_sprite_show(sprite_struct *sp)
 {
@@ -309,8 +309,8 @@ inline void gba_sprite_show(sprite_struct *sp)
 /*****************************************************************************/
 
 /*
- * Oculta un sprite.
- * @param sp  El sprite
+ * Hides a sprite.
+ * @param sp The sprite
  */
 inline void gba_sprite_hide(sprite_struct *sp)
 {
@@ -326,10 +326,10 @@ inline void gba_sprite_hide(sprite_struct *sp)
 /*****************************************************************************/
 
 /*
- * Fija la posición inicial de un sprite.
- * @param sp  El sprite
- * @param x   Posición en x
- * @param y   Posición en y
+ * Sets the starting position of a sprite.
+ * @param sp The sprite
+ * @param x Position in x
+ * @param and Position in y
  */
 inline void gba_sprite_set_pos(sprite_struct *sp, short x, short y)
 {
@@ -340,10 +340,10 @@ inline void gba_sprite_set_pos(sprite_struct *sp, short x, short y)
 /*****************************************************************************/
 
 /*
- * Mueve un sprite en la dirección indicada por la máscara.
- * @param sp El sprite
- * @param dx Desplazamiento en x
- * @param dy Desplazamiento en y
+ * Move a sprite in the direction indicated by the mask.
+ * @param sp The sprite
+ * @param dx Offset x
+ * @param dy Offset in y
  */
 void gba_sprite_move(sprite_struct *sp, short dx, short dy)
 {
@@ -353,8 +353,8 @@ void gba_sprite_move(sprite_struct *sp, short dx, short dy)
 /*****************************************************************************/
 
 /*
- * Habilita el alpha-blending para un sprite
- * @param sp Puntero al sprite
+ * Enable alpha-blending for a sprite
+ * @param sp Pointer to sprite
  */
 inline void gba_sprite_enable_bld(sprite_struct * sp)
 {
@@ -364,8 +364,8 @@ inline void gba_sprite_enable_bld(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Anula el alpha-blending para un sprite
- * @param sp Puntero al sprite
+ * Overrides alpha-blending for a sprite
+ * @param sp Pointer to sprite
  */
 inline void gba_sprite_disable_bld(sprite_struct * sp)
 {
@@ -375,8 +375,8 @@ inline void gba_sprite_disable_bld(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Voltea el sprite horizontalmente
- * @param sp Puntero al sprite
+ * Flip the sprite horizontally
+ * @param sp Pointer to sprite
  */
 inline void gba_sprite_flip_h(sprite_struct * sp)
 {
@@ -386,8 +386,8 @@ inline void gba_sprite_flip_h(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Voltea el sprite verticalmente
- * @param sp Puntero al sprite
+ * Flip the sprite vertically
+ * @param sp Pointer to sprite
  */
 inline void gba_sprite_flip_v(sprite_struct * sp)
 {
@@ -397,16 +397,16 @@ inline void gba_sprite_flip_v(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Habilita la rotación y escalado de un sprite
- * @param sp        Puntero al sprite
- * @param rot_index Indice en la tabla de rotaciones para los parámetros
+ * Enables rotation and scaling of a sprite
+ * @param sp Pointer to sprite
+ * @param rot_index Index in the rotation table for parameters
  */
 inline void gba_sprite_enable_rotation(sprite_struct * sp, short rot_index)
 {
-  /* Activamos la rotación para el sprite */
+  /* We activate the rotation for the sprite */
   gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[0] |= OBJ_ROTATION;
   
-  /* Fijamos su entrada en la tabla de rotaciones */
+  /* Fix your entry in the rotation table */
   gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[1] &= ~OBJ_ROTDATA(31);
   gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[1] |= OBJ_ROTDATA(rot_index);
 }
@@ -414,9 +414,9 @@ inline void gba_sprite_enable_rotation(sprite_struct * sp, short rot_index)
 /*****************************************************************************/
 
 /*
- * Fija el ańgulo inicial de rotación hardware para un sprite.
- * @param sp     Puntero al sprite
- * @param angle  Angulo de rotación en grados enteros
+ * Sets the initial hardware rotation angle for a sprite.
+ * @param sp Pointer to sprite
+ * @param angle Angle of rotation in whole degrees
  */
 inline void gba_sprite_set_angle(sprite_struct * sp, int angle)
 {
@@ -427,9 +427,9 @@ inline void gba_sprite_set_angle(sprite_struct * sp, int angle)
 /*****************************************************************************/
 
 /*
- * Modifica el ángulo de rotación actual del sprite.
- * @param sp     Puntero al sprite
- * @param dangle Incremento/decremento al angulo actual de rotación
+ * Modifies the current rotation angle of the sprite.
+ * @param sp Pointer to sprite
+ * @param dangle Increment / decrease to current rotation angle
  */
 inline void gba_sprite_rotate(sprite_struct * sp, int dangle)
 {
@@ -440,10 +440,10 @@ inline void gba_sprite_rotate(sprite_struct * sp, int dangle)
 /*****************************************************************************/
 
 /*
- * Fija el escalado hardware inicial para un sprite.
- * @param sp      Puntero al sprite
- * @param scale_h Escalado horizontal
- * @param scale_v Escalado vertical
+ * Sets the initial hardware scaling for a sprite.
+ * @param sp Pointer to sprite
+ * @param scale_h Scaled horizontal
+ * @param scale_v Vertical scaling
  */
 inline void gba_sprite_set_scale(sprite_struct * sp, fixed_p scale_h, fixed_p scale_v)
 {
@@ -455,9 +455,9 @@ inline void gba_sprite_set_scale(sprite_struct * sp, fixed_p scale_h, fixed_p sc
 /*****************************************************************************/
 
 /*
- * Si la rotación del sprite está activada, dobla el tamaño del sprite.
- * En caso contrario, el sprite se oculta
- * @param sp       Puntero al sprite
+ * If the rotation of the sprite is activated, double the size of the sprite.
+ * Otherwise, the sprite is hidden
+ * @param sp Pointer to sprite
  */
 void inline gba_sprite_enable_double_size(sprite_struct * sp)
 {
@@ -467,9 +467,9 @@ void inline gba_sprite_enable_double_size(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Si la rotación del sprite está activada, restaura el tamaño del sprite
- * En caso contrario, vuelve a mostrar el sprite
- * @param sp       Puntero al sprite
+ * If sprite rotation is enabled, resize the sprite
+ * Otherwise, display the sprite again.
+ * @param sp Pointer to sprite
  */
 void inline gba_sprite_disable_double_size(sprite_struct * sp)
 {
@@ -479,10 +479,10 @@ void inline gba_sprite_disable_double_size(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Define una secuencia de frames para crear la animación del sprite
- * @param sp  Puntero al sprite
- * @param seq Vector que define la secuencia
- * @param len Longitud de la secuencia
+ * Define a sequence of frames to create the animation of the sprite
+ * @param sp Pointer to sprite
+ * @param seq Vector that defines the sequence
+ * @param len Length of the sequence
  */
 void inline gba_sprite_set_frame_seq(sprite_struct * sp, const short* seq, short len)
 {
@@ -494,8 +494,8 @@ void inline gba_sprite_set_frame_seq(sprite_struct * sp, const short* seq, short
 /*****************************************************************************/
 
 /*
- * Avanza al siguiente frame de la animación
- * @param sp  Puntero al sprite
+ * Move to the next frame of the animation
+ * @param sp Pointer to sprite
  */
 void gba_sprite_next_frame(sprite_struct * sp)
 {
@@ -508,16 +508,16 @@ void gba_sprite_next_frame(sprite_struct * sp)
     frame = sp->data + (sp->frame_size * sp->frame_seq[sp->frame_index]);
   }
 
-  /* Copiamos los caracteres del frame a la memoria de vídeo */
+  /* We copy the characters of the frame to the video memory */
   gba_dma_memcpy((void*)gba_vram.obj_data[name], frame, sp->frame_size);
 }
 
 /*****************************************************************************/
 
 /*
- * Fija el tamaño de los pixels de los sprites en modo mosaico
- * @param h_size Tamaño horizontal del mosaico de los fondos (1-16)
- * @param v_size Tamaño vertical del mosaico de los fondos (1-16)
+ * Sets the pixel size of the sprites in mosaic mode
+ * @param h_size Horizontal mosaic size of backgrounds (1-16)
+ * @param v_size Vertical mosaic size of backgrounds (1-16)
  */
 inline void gba_sprite_set_mosaic_size(short h_size, short v_size)
 {
@@ -529,8 +529,8 @@ inline void gba_sprite_set_mosaic_size(short h_size, short v_size)
 /*****************************************************************************/
 
 /*
- * Habilita el modo mosaico en el sprite.
- * @param sp  Puntero al sprite
+ * Enable mosaic mode in the sprite.
+ * @param sp Pointer to sprite
  */
 void gba_sprite_enable_mosaic(sprite_struct * sp)
 {
@@ -540,8 +540,8 @@ void gba_sprite_enable_mosaic(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Deshabilita el modo mosaico en el sprite.
- * @param sp  Puntero al sprite
+ * Disables mosaic mode in the sprite.
+ * @param sp Pointer to sprite
  */
 void gba_sprite_disable_mosaic(sprite_struct * sp)
 {
@@ -551,28 +551,28 @@ void gba_sprite_disable_mosaic(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Comprueba si dos sprites se solapan.
- * @param sp1  Puntero al primer sprite
- * @param sp2  Puntero al segundo sprite
- * @return TRUE si hay solapamiento o FALSE en otro caso
+ * Check if two sprites overlap.
+ * @param sp1 Pointer to first sprite
+ * @param sp2 Pointer to second sprite
+ * @return TRUE if overlap or FALSE otherwise
  */
 char gba_sprite_overlap(sprite_struct * sp1, sprite_struct * sp2)
 {
   char overlap = FALSE;
 
-  /* Coordenadas de sp1 */
+  /* Photos of sp1 */
   short min_x1 = sp1->pos_x;
   short min_y1 = sp1->pos_y;
   short max_x1 = sp1->pos_x + sp1->width - 1;
   short max_y1 = sp1->pos_y + sp1->height -1;
 
-  /* Coordenadas de sp2 */
+  /* Photos of sp2 */
   short min_x2 = sp2->pos_x;
   short min_y2 = sp2->pos_y;
   short max_x2 = sp2->pos_x + sp2->width - 1;
   short max_y2 = sp2->pos_y + sp2->height -1;
   
-  /* Compruebo si hay solapamiento */
+  /* I check for overlap */
   if (min_x2 >= min_x1 && min_x2 <= max_x1 &&
       min_y2 >= min_y1 && min_y2 <= max_y1)
     overlap = TRUE;

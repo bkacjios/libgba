@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Tipos de datos y constantes para manejar la memoria VRAM de la GBA        */
+/* Data types and constants to handle the VRAM memory of the GBA */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ * We only include this file once
  */
 #ifndef vram_h
 #define vram_h
@@ -15,7 +15,7 @@
 #include    "std_c.h"
 
 /*****************************************************************************/
-/* Dimensiones de la pantalla                                                */
+/* Display dimensions */
 /*****************************************************************************/
 
 #define BG_MODE_WIDTH3   240
@@ -25,7 +25,7 @@
 
 
 /*****************************************************************************/
-/* Formato de las tripletas RBG en la VRAM                                   */
+/* Format of the RBG triplets in the VRAM */
 /*****************************************************************************/
 
 #define RGB(r,g,b)             ((unsigned short)(((r) & 0x001f) + \
@@ -34,46 +34,43 @@
 
 
 /*****************************************************************************/
-/* Interfaz de la memoria VRAM                                               */
+/* VRAM memory interface */
 /*****************************************************************************/
 
 /*
- * En los modos de texto, cada carácter está formado por matrices de 8x8
- * pixels, y cada pixel ocupa 4 bits (para paletas de 16 colores) o un byte
- * (para paletas de 256 colores).
+ * In text modes, each character consists of 8x8 matrices
+ * Pixels, and each pixel occupies 4 bits (for 16-color palettes) or one byte
+ * (For 256-color palettes).
  */
 typedef char gba_video_char16[32];
 typedef char gba_video_char256[64];
 
 /*
- * En los modos de texto, la VRAM está dividida en 4 bloques de caracteres, de
- * 16 KB cada uno, en los que se almacenarán los caracteres para definir los
- * fondos.
+ * In text modes, the VRAM is divided into 4 character blocks, from
+ * 16 KB each, in which the characters will be stored to define the
+ * money.
  */
 typedef gba_video_char256 gba_video_char_block[256];
 
 /*
- * Para definir un fondo de pantalla se usa un mapa que indica qué carácter del
- * bloque de caracteres se usará para cada uno de los caracteres de la pantalla
- *
- *  * En los fondos de texto cada entrada del mapa es de 2 bytes:
- *     |Paleta 16 (4 bits) | FlipV (1 bit) | FlipH (1 bit) | Indice (10 bits) |
- *
- *  * En los fondos de rotación cada entrada ocupa un byte:
- *     |Indice del carácter (8 bits) |
- *
- * En modo texto, los mapas de 256x512, 512x256 y 512x512 no caben en un
- * screen-block, así que se parten en dos (256x512 y 512x256) o cuatro bloques
- * (512x512)
+ * To define a wallpaper, a map is used that indicates which character of the
+ * Character block will be used for each character on the screen
+ *  * In the text backgrounds each map entry is 2 bytes:
+ *     | Palette 16 (4 bits) | FlipV (1 bit) | FlipH (1 bit) | Index (10 bits) |
+ *  * In the rotation backgrounds each entry occupies one byte:
+ *     | Index of character (8 bits) |
+ * In text mode, the 256x512, 512x256, and 512x512 maps do not fit into a
+ * Screen-block, so they split in two (256x512 and 512x256) or four blocks
+ * (512x512)
  */
 typedef short gba_video_screen_block[1024];
 
 /*
- * Estructura para acceder a las diferentes zonas de la VRAM
+ * Structure to access the different zones of the VRAM
  */
 typedef union
 {
-  struct // Modos de texto
+  struct /* Text modes */
   {
     union
     {
@@ -82,16 +79,16 @@ typedef union
     } __attribute__ ((packed));
     
     /*
-     * La memoria para almacenar los sprites está organizada en caracteres de
-     * 16 colores. Si se usan sprites de 256 colores, cada carácter del sprite
-     * ocupará dos caracteres de la memoria.
+     * The memory for storing the sprites is organized in characters of
+     * 16 colors. If 256 color sprites are used, each character in the sprite
+     * Will occupy two characters in the memory.
      */
     gba_video_char16 obj_data[1024];
   };
   
   short video_buffer[BG_MODE_WIDTH3*BG_MODE_HEIGHT3]; // Modo 3
     
-  struct // Modos 4 y 5
+  struct /* Modes 4 and 5 */
   {
     short front_buffer[BG_MODE_WIDTH5*BG_MODE_HEIGHT5];
     short back_buffer[BG_MODE_WIDTH5*BG_MODE_HEIGHT5];

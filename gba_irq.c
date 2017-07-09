@@ -1,8 +1,8 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas para manejar interrupciones en la GBA     */
+/* Basic functions library for handling interruptions in the GBA */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -15,35 +15,35 @@
 /*****************************************************************************/
 
 /*
- * Manejador principal de las interrupciones.
- * Identifica el origen de la interrupción, llama al manejador adecuado y
- * reconoce su atención.
- * Esta versión es muy lenta porque se ejecuta desde la ROM. En startup.s hay
- * otra escrita en ensamblador mucho mejor. También está la versión cutre sin
- * tabla de interrupciones ...
+ * Main interrupt handler.
+ * Identifies the source of the interrupt, calls the appropriate handler, and
+ * Acknowledges his attention.
+ * This version is very slow because it runs from the ROM. In startup there is
+ * Another written much better assembler. There is also the seedy version without
+ * Interrupt table ...
  */
 void gba_irq_master_handler(void)
 {
   int i = 0;
 
-  gba_irq_disable_all();        /* Deshabilitamos las interrupciones */
+  gba_irq_disable_all();        /* We disable interruptions */
 
   for (i = 0 ; i < IRQ_MAX ; i++)
   {
-    if(gba_irq_regs.IF & (1 << i)) /* Comprobamos qué interrupción se ha generado */
+    if(gba_irq_regs.IF & (1 << i)) /* We check what interrupt has been generated */
     {
-      gba_irq_handler_table[i](); /* Llamamos a su manejador */
-      gba_irq_regs.IF |= (1 << i); /* Reconocemos su atención */
+      gba_irq_handler_table[i](); /* We called your manager */
+      gba_irq_regs.IF |= (1 << i); /* We recognize your attention */
     }
   }
 
-  gba_irq_enable_all();         /* Habilitamos las interrupciones */
+  gba_irq_enable_all();         /* Enable interrupts */
 }
 
 /*****************************************************************************/
 
 /*
- * Habilita la gestión de interrupciones
+ * Enable interrupt management
  */
 inline void gba_irq_enable_all()
 {
@@ -53,7 +53,7 @@ inline void gba_irq_enable_all()
 /*****************************************************************************/
 
 /*
- * Deshabilita la gestión de interrupciones
+ * Disable interrupt management
  */
 inline void gba_irq_disable_all()
 {
@@ -63,15 +63,15 @@ inline void gba_irq_disable_all()
 /*****************************************************************************/
 
 /*
- * Función para habilitar la atención de interrupciones concretas
- * @param masc    Máscara para seleccionar interrupciones 
- * @param handler Función para gestionar las interrupciones
+ * Function to enable the attention of concrete interrupts
+ * @param masc Mask to select interrupts
+ * @param handler Function to handle interrupts
  */
 void gba_irq_enable(short masc, gba_irq_handler handler)
 {
   int i;
 
-  /* Copiamos el manejador en la tabla de manejadores */
+  /* Copy the handle in the handle table */
   for (i = 0 ; i < IRQ_MAX ; i++)
   {
     if (masc & (1 << i))
@@ -86,8 +86,8 @@ void gba_irq_enable(short masc, gba_irq_handler handler)
 /*****************************************************************************/
 
 /*
- * Deshabilita interrupciones concretas
- * @param masc Máscara para seleccionar interrupciones 
+ * Disable specific interrupts
+ * @param masc Mask to select interrupts
  */
 inline void gba_irq_disable(short masc)
 {

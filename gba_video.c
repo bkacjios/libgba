@@ -1,8 +1,8 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas de vídeo                                  */
+/* Basic video library functions */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -11,7 +11,7 @@
 /*****************************************************************************/
 
 /*
- * Cambia el buffer de vídeo (en los modos con doble buffer)
+ * Change the video buffer (in dual buffer modes)
  */
 inline void gba_video_swap_buffer()
 {
@@ -21,7 +21,7 @@ inline void gba_video_swap_buffer()
 /*****************************************************************************/
 
 /*
- * Espera hasta que se llegue a un periodo de VBLANK.
+ * Wait until you reach a VBLANK period.
  */
 inline void gba_video_wait_vblank()
 {
@@ -32,8 +32,8 @@ inline void gba_video_wait_vblank()
 /*****************************************************************************/
 
 /*
- * Fija el límite de líneas dibujadas para generar la interrupción VIDEO_INT_VCOUNTER
- * @limit Limite 
+ * Sets the boundary of lines drawn to generate the interrupt VIDEO_INT_VCOUNTER
+ * @limit Limit
  */
 inline void gba_video_set_vcounter_limit(u_char limit)
 {
@@ -43,8 +43,8 @@ inline void gba_video_set_vcounter_limit(u_char limit)
 /*****************************************************************************/
 
 /*
- * Habilita la generación de interrupciones.
- * @mask Máscara de las interrupciones que se deben generar.
+ * Enables the generation of interrupts.
+ * @mask Mask of the interrupts to be generated.
  */
 inline void gba_video_enable_int(u_char mask)
 {
@@ -54,25 +54,25 @@ inline void gba_video_enable_int(u_char mask)
 /*****************************************************************************/
 
 /*
- * Deshabilita la generación de interrupciones.
- * @mask Máscara de las interrupciones que se deben generar.
+ * Disables interrupt generation.
+ * @mask Mask of the interrupts to be generated.
  */
 inline void gba_video_disable_int(u_char mask)
 {
-  /* Fijo la máscara para las interrupciones */
+  /* I set the mask for interrupts */
   gba_video_regs.DISPSTAT &= ~mask;
 }
 
 /*****************************************************************************/
 
 /*
- * Habilita el alpha-blending.
- * Los niveles de transparencia son valores discretos de 0 a 16, indicando el
- * valor 0 total transparencia y el valor 16 total opacidad
- * @param layer1 Primera capa (VIDEO_BLD_X)
- * @param layer2 Segunda capa (VIDEO_BLD_X)
- * @param level1 Nivel de transparencia de la primera capa
- * @param level2 Nivel de transparencia de la segunda capa
+ * Enable alpha-blending.
+ * The transparency levels are discrete values ​​from 0 to 16, indicating the
+ * Value 0 total transparency and value 16 total opacity
+ * @param layer1 First layer (VIDEO_BLD_X)
+ * @param layer2 Second layer (VIDEO_BLD_X)
+ * @param level1 Level of transparency of the first layer
+ * @param level2 Level of transparency of the second layer
  */
 inline void gba_video_enable_bld_alpha(short layer1, short layer2, char level1, char level2)
 {
@@ -83,11 +83,11 @@ inline void gba_video_enable_bld_alpha(short layer1, short layer2, char level1, 
 /*****************************************************************************/
 
 /*
- * Habilita el fade-in de una capa (incremento del brillo).
- * Los niveles de incremento son valores discretos de 0 a 16, indicando el
- * valor 0 ningún incremento y el 16 la saturación al blanco
- * @param layer Capa (VIDEO_BLD_X)
- * @param level Nivel de incremento
+ * Enables fade-in of a layer (increase brightness).
+ * Increment levels are discrete values ​​from 0 to 16, indicating the
+ * Value 0 no increment and 16 saturation to the target
+ * @param layer (VIDEO_BLD_X)
+ * @param level
  */
 inline void gba_video_enable_bld_fade_in(short layer, char level)
 {
@@ -98,11 +98,11 @@ inline void gba_video_enable_bld_fade_in(short layer, char level)
 /*****************************************************************************/
 
 /*
- * Habilita el fade-out de una capa (decremento del brillo).
- * Los niveles de decremento son valores discretos de 0 a 16, indicando el
- * valor 0 ningún decremento y el 16 la saturación al negro
- * @param layer Capa (VIDEO_BLD_X)
- * @param level Nivel de decremento
+ * Enables the fade-out of a layer (decrease in brightness).
+ * Decrement levels are discrete values ​​from 0 to 16, indicating the
+ * Value 0 no decrement and 16 saturation to black
+ * @param layer (VIDEO_BLD_X)
+ * @param level Decrease level
  */
 inline void gba_video_enable_bld_fade_out(short layer, char level)
 {
@@ -113,7 +113,7 @@ inline void gba_video_enable_bld_fade_out(short layer, char level)
 /*****************************************************************************/
 
 /*
- * Deshabilita los efectos especiales de color (alpha-blending, fade-in/fade-out)
+ * Disables special color effects (alpha-blending, fade-in / fade-out)
  */
 inline void gba_video_disable_bld()
 {

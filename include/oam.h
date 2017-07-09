@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Tipos de datos y constantes para manejar la memoria OAM de la GBA         */
+/* Data types and constants to handle the OAM memory of the GBA */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ * We only include this file once
  */
 #ifndef oam_h
 #define oam_h
@@ -15,35 +15,35 @@
 #include    "std_c.h"
 
 /*****************************************************************************/
-/* Interfaz de la memoria OAM                                                */
+/* OAM memory interface */
 /*****************************************************************************/
 
 /*
- * Atributos de cada sprite
+ * Attributes of each sprite
  */
 typedef struct
 {
-  u_short ATTRIBUTE[3];  /* atributos de cada sprite */
-  u_short filler;        /* relleno */
+  u_short ATTRIBUTE[3];  /* Attributes of each sprite */
+  u_short filler;        /* filling */
 }gba_oam_obj_entry;
 
 /*
- * Parámetros para la rotación/escalado de sprites
+ * Parameters for sprites rotation / scaling
  */
 typedef struct
 {
-  u_short filler1[3];  /* relleno */
-  u_short PA;          /* rotation/scaling parameter a (dx) */
-  u_short filler2[3];  /* relleno */
-  u_short PB;          /* rotation/scaling parameter b (dmx) */
-  u_short filler3[3];  /* relleno */
-  u_short PC;          /* rotation/scaling parameter c (dy) */
-  u_short filler4[3];  /* relleno */
-  u_short PD;          /* rotation/scaling parameter d (dmy) */
+  u_short filler1[3];  /* filling */
+  u_short PA;          /* Rotation / scaling parameter a (dx) */
+  u_short filler2[3];  /* filling */
+  u_short PB;          /* Rotation / scaling parameter b (dmx) */
+  u_short filler3[3];  /* filling */
+  u_short PC;          /* Rotation / scaling parameter c (dy) */
+  u_short filler4[3];  /* filling */
+  u_short PD;          /* Rotation / scaling parameter d (dmy) */
 }gba_oam_rotation_entry;
 
 /*
- * Estructura para manejar la OAM
+ * Structure to handle the OAM
  */
 typedef union
 {
@@ -55,49 +55,49 @@ extern volatile gba_oam_struct gba_oam;
 
 
 /*****************************************************************************/
-/* Atributo 0                                                                */
+/* Attribute 0 */
 /*****************************************************************************/
 
 /*
- * Coordenada Y del sprite ([-128,127])
+ * Y coordinate of the sprite ([-128,127])
  */
 #define OBJ_Y(n)                   (((short)(n)) & 0x00ff)
 
 /*
- * Activa la rotación del sprite
+ * Activates sprite rotation
  */
 #define OBJ_ROTATION               ((short) (1 << 8))
 
 /*
- * Si está activada la rotación, el bit 9 dobla el tamaño del sprite
+ * If rotation is enabled, bit 9 doubles the size of the sprite
  */
 #define OBJ_SIZE_DOUBLE            ((short) (1 << 9))
                                               
 /*
- * Si NO está activada la rotación, el bit 9 impide que se muestre el sprite
+ * If rotation is NOT enabled, bit 9 prevents sprite from being displayed
  */
 #define OBJ_SPRITE_OFF             ((short) (1 << 9))
 
 /*
- * Flags de modo. Controlan el alpha blending
+ * Mode flags. Control alpha blending
  */
 #define OBJ_MODE_NORMAL            ((short) (0 << 10))
 #define OBJ_MODE_BLD               ((short) (1 << 10))
 #define OBJ_MODE_WINDOWED          ((short) (1 << 11))
 
 /*
- * Activa el modo mosaico
+ * Turn mosaic mode on
  */
 #define OBJ_MOSAIC                 ((short) (1 << 12))
 
 /*
- * Selecciona entre 16 o 256 colores
+ * Select between 16 or 256 colors
  */
 #define OBJ_COLOR16                ((short) (0 << 13))
 #define OBJ_COLOR256               ((short) (1 << 13))
 
 /*
- * Forma del sprite
+ * Shape of the sprite
  */
 #define OBJ_SQUARE                 ((short) (0 << 14))
 #define OBJ_WIDE                   ((short) (1 << 14))
@@ -105,27 +105,27 @@ extern volatile gba_oam_struct gba_oam;
 
 
 /*****************************************************************************/
-/* Atributo 1                                                                */
+/* Attribute 1 */
 /*****************************************************************************/
 
 /*
- * Coordenada X del sprite ([-256,255])
+ * Sprite X coordinate ([-256,255])
  */
 #define OBJ_X(n)                   (((short)(n)) & 0x01ff)
 
 /*
- * Selección de los parámetros de rotación/escalado (si la rotación está habilitada)
+ * Selecting the rotation / scaling parameters (if rotation is enabled)
  */
 #define OBJ_ROTDATA(n)			       ((((short) (n)) & 0x001f) << 9)
 
 /*
- * Flags para voltear el sprite (si la rotación no está activa)
+ * Flags to flip the sprite (if rotation is not active)
  */
 #define OBJ_HORIZONTAL_FLIP		     ((short) (1 << 12))
 #define OBJ_VERTICAL_FLIP		       ((short) (1 << 13))
 
 /*
- * Tamaño del sprite
+ * Size of the sprite
  */
 #define OBJ_SIZE8			             ((short) (0 << 14))
 #define OBJ_SIZE16			           ((short) (1 << 14))
@@ -133,24 +133,24 @@ extern volatile gba_oam_struct gba_oam;
 #define OBJ_SIZE64	 		           ((short) (3 << 14))
 
 /*****************************************************************************/
-/* Atributo 2                                                                */
+/* Attribute 2 */
 /*****************************************************************************/
 
 /*
- * Índice del primer carácter del sprite en la memoria de vídeo
+ * Index of the first character of the sprite in video memory
  */
 #define OBJ_NAME(n)                (((short)(n)) & 0x03ff)
 
 /*
- * Prioridad del sprite
+ * Sprite priority
  */
-#define OBJ_MAX_PRIOR              ((short) (0 << 10)) /* Prioridad máxima*/
-#define OBJ_MEDIUM_PRIOR           ((short) (1 << 10)) /* Prioridad media */
-#define OBJ_LOW_PRIOR              ((short) (2 << 10)) /* Prioridad baja */
-#define OBJ_MIN_PRIOR              ((short) (3 << 10)) /* Prioridad mínima */
+#define OBJ_MAX_PRIOR              ((short) (0 << 10)) /* Maximum priority */
+#define OBJ_MEDIUM_PRIOR           ((short) (1 << 10)) /* Medium priority */
+#define OBJ_LOW_PRIOR              ((short) (2 << 10)) /* Low Priority */
+#define OBJ_MIN_PRIOR              ((short) (3 << 10)) /* Minimum Priority */
 
 /*
- * Paleta del sprite (sólo para los de 16 colores)
+ * Sprite palette (only for 16-color)
  */
 #define OBJ_PALETTE_16(n)		       ((((short) (n)) & 0x000f) << 12)
 

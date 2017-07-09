@@ -1,13 +1,13 @@
 /*****************************************************************************/
 /*                                                                           */
-/* Sistemas operativos empotrados                                            */
+/* Embedded Operating Systems */
 /*                                                                           */
-/* Biblioteca de funciones básicas de sonido                                 */
+/* Basic sound function library */
 /*                                                                           */
 /*****************************************************************************/
 
 /*
- * Sólo incluimos este archivo una vez
+ * We only include this file once
  */
 #ifndef gba_sound_h
 #define gba_sound_h
@@ -18,19 +18,19 @@
 /*****************************************************************************/
 
 /*
- * Identificadores de los los canales de sonido directo
+ * Identifiers of the direct sound channels
  */
 #define SOUND_DSA                      0
 #define SOUND_DSB                      1
 
 /*
- * Constantes para seleccionar el volumen de los canales de sonido directo
+ * Constants for selecting the volume of the direct sound channels
  */
-#define SOUND_DS_OUTPUT_RATIO_50       0       /*  50% */
+#define SOUND_DS_OUTPUT_RATIO_50       0       /*  fifty% */
 #define SOUND_DS_OUTPUT_RATIO_100      1       /* 100% */
 
 /*
- * Constantes para seleccionar el tipo de salida.
+ * Constants to select output type.
  */
 #define SOUND_DS_OUTPUT_TO_RIGHT  (1 << 0)
 #define SOUND_DS_OUTPUT_TO_LEFT   (1 << 1)
@@ -40,89 +40,87 @@
 /*****************************************************************************/
 
 /*
- * Estructura de datos para manejar los canales de sonido directo (DSA y DSB)
+ * Data structure to handle direct sound channels (DSA and DSB)
  */
 typedef struct
-{                              /* desplazamientos en SOUNDCNT_H */
-  u_char     volume_offset;    /* volumen */
-  u_char     lr_offset;        /* lineas izquierda y derecha */
-  u_char     timer_offset;     /* temporizador */
-  u_char     reset_offset;     /* reset */
-  gba_word32 FIFO;             /* Puntero a la cola FIFO */
+{                              /* Displacements in SOUNDCNT_H */
+  u_char     volume_offset;    /* volume */
+  u_char     lr_offset;        /* Left and right lines */
+  u_char     timer_offset;     /* Timer */
+  u_char     reset_offset;     /* Reset */
+  gba_word32 FIFO;             /* Pointer to the FIFO queue */
 } sound_ds_struct;
 
 /*****************************************************************************/
 
 /*
- * Habilita el controlador de sonido
+ * Enable sound driver
  */
 inline void gba_sound_enable();
 
 /*****************************************************************************/
 
 /*
- * Deshabilita el controlador de sonido
+ * Disable sound driver
  */
 inline void gba_sound_disable();
 
 /*****************************************************************************/
 
 /*
- * Inicializa el temporizador que se usará en un canal de sonido directo.
- * @param channel Número de canal (SOUND_DSA o SOUND_DSB)
- * @param timer   Temporizador (sólo TIMER0 o TIMER1)
+ * Initializes the timer to be used on a direct sound channel.
+ * @param channel Channel number (SOUND_DSA or SOUND_DSB)
+ * @param timer Timer (TIMER0 or TIMER1 only)
  */
 inline void gba_sound_ds_set_timer(u_char channel, u_char timer);
 
 /*****************************************************************************/
 
 /*
- * Inicializa el volumen de un canal de sonido directo.
- * @param channel Número de canal (SOUND_DSA o SOUND_DSB)
- * @param volume  Volumen (SOUND_DS_OUTPUT_RATIO_50 o SOUND_DS_OUTPUT_RATIO_100)
+ * Initializes the volume of a direct sound channel.
+ * @param channel Channel number (SOUND_DSA or SOUND_DSB)
+ * @param volume Volume (SOUND_DS_OUTPUT_RATIO_50 or SOUND_DS_OUTPUT_RATIO_100)
  */
 inline void gba_sound_ds_set_volume(u_char channel, u_char volume);
 
 /*****************************************************************************/
 
 /*
- * Inicializa la salida de un canal de sonido directo.
- * @param channel Número de canal (SOUND_DSA o SOUND_DSB)
- * @param output  Tipo de salida  (SOUND_DS_OUTPUT_TO_RIGHT,
- *                SOUND_DS_OUTPUT_TO_LEFT o SOUND_DS_OUTPUT_TO_BOTH)
+ * Initializes the output of a direct sound channel.
+ * @param channel Channel number (SOUND_DSA or SOUND_DSB)
+ * @param output Output Type (SOUND_DS_OUTPUT_TO_RIGHT,
+ *                SOUND_DS_OUTPUT_TO_LEFT or SOUND_DS_OUTPUT_TO_BOTH)
  */
 inline void gba_sound_ds_set_output(u_char channel, u_char output);
 
 /*****************************************************************************/
 
 /*
- * Resetea la cola de un canal de sonido directo.
- * @param channel Número de canal (SOUND_DSA o SOUND_DSB)
+ * Resets the queue of a direct sound channel.
+ * @param channel Channel number (SOUND_DSA or SOUND_DSB)
  */
 inline void gba_sound_ds_fifo_reset(u_char channel);
 
 /*****************************************************************************/
 
 /*
- * Reproduce una muestra de sonido.
- *
- * Usa los temporizadores TIMER0 y TIMER1 para la reproducción. TIMER0 mide el
- * tiempo entre muestras y TIMER1 va contando el número de muestras que se van
- * reproduciendo.
- * También programa una interrupción en TIMER1 que se procucirá cuando se haya
- * terminado la reproducción y que se atenderá mediante la función gba_sound_ds_stop
- *
- * @param channel Canal de sonido directo (SOUND_DSA o SOUND_DSB)
- * @param samples Buffer con las muestras
- * @param size    Tamaño del buffer en bytes
- * @param rate    Frecuencia de muestreo
+ * Plays a sample sound.
+ * Use the timers TIMER0 and TIMER1 for playback. TIMER0 measures the
+ * Time between samples and TIMER1 counts the number of samples that go
+ * Reproducing.
+ * It also programs an interrupt in TIMER1 that will be
+ * Finished playback and will be answered by the gba_sound_ds_stop
+ * @param channel Direct sound channel (SOUND_DSA or SOUND_DSB)
+ * @param samples Buffer with samples
+ * @param size Buffer size in bytes
+ * @param rate Sampling frequency
  */
 void gba_sound_ds_play(u_char channel, const void* samples, u_short size, u_short rate);
 
 /*****************************************************************************/
 
 /*
- * Finaliza la reproducción de sonido
+ * Ends sound playback
  */
 inline void gba_sound_ds_stop();
 
