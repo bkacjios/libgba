@@ -1,18 +1,18 @@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
-@ Sistemas operativos empotrados                                              @
-@                                                                             @
-@ Segundo ejemplo: El "hola mundo" en la GBA en C                             @
-@                                                                             @
+@ Embedded Operating Systems                                                  @
+@                                                                             @
+@ Second example: The "Hello World" in the GBA in C                           @
+@                                                                             @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Constantes                                                                  @
+@ Constants                                                                   @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Modos de ejecución y bits de estado                                         @
+@ Execution Modes and Status Bits                                             @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 .set ARM_MODE_USER,            0x10
@@ -27,10 +27,10 @@
 .set ARM_F_BIT,                0x40
 .set ARM_T_BIT,                0x20
 
-@ Relleno para las pilas (para detectar desbordamientos)
-.set RELLENO_PILA,     0xcadacafe
+@ heap filler (to detect overflows)
+.set HEAP_FILLER,     0xcadacafe
 
-@ Flags de interrupción
+@ Interrupt Flags
 .set IRQ_VBLANK,       (1 << 0)
 .set IRQ_HBLANK,       (1 << 1)
 .set IRQ_VCOUNT,       (1 << 2)
@@ -48,64 +48,64 @@
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Se usará el repertorio de instrucciones de 32 bits                          @
+@ The 32-bit instruction repertoire                                           @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-@ Creamos una nueva sección para indicarle al script del linker
-@ que la coloque al principio de la ROM
+@ We created a new section to tell the linker script
+@ Put it at the beginning of the ROM
 .section .boot
 
-@ El código de arranque debe ser de 32 bits
+@ The boot code must be 32-bit
 .code 32
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Punto de entrada                                                            @
+@ Entry point                                                                 @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 .globl _ENTRY_
 _ENTRY_:
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Incluimos la cabecera del cartucho                                          @
+@ We include the cartridge header                                             @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	@ La primera instrucción es un salto que se salta la cabecera
+	@ The first instruction is a jump that jumps the header
 	b	start_rom
 
 	@ Nintendo Logo (156 bytes)
 	.fill   156, 1, 0
 
-	@ Game Title (12 caracteres en mayúsculas)
+	@ Game Title (12 characters in capital letters)
 	.byte   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	.byte   0x00, 0x00, 0x00, 0x00
 
-	@ Game Code (4 caracteres en mayúsculas)
+	@ Game Code (4 characters in capital letters)
 	.byte   0x00, 0x00, 0x00, 0x00
 
-	@ Maker code (2 caracteres en mayúsculas, ej. "01" -> Nintendo)
+	@ Maker code (2 characters in capital letters, eg "01" -> Nintendo)
 	.byte   0x30, 0x31
 
-	@ Fixed value (debe se 0x96)
+	@ Fixed value (should be 0x96)
 	.byte   0x96
 
-	@ Main Unit Code (Identifica el HW requerido. Debería ser 0x00)
+	@ Main Unit Code (Identifies the required HW. Should be 0x00)
 	.byte   0x00
 
-	@ Device Type (Tipo de cartucho)
+	@ Device Type
 	.byte   0x00
 
-	@ Reserved Area (7 Bytes a 0)
+	@ Reserved Area (7 Bytes to 0)
 	.byte   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 
-	@ Software Version Number (Número de versión del juego)
+	@ Software Version Number
 	.byte   0x00
 
-	@ Complement Check (Checksum de la cabecera)
-	@ Se debe calcular como:
-	@ chk=0:for i=0A0h to 0BCh:chk=chk-[i]:next:chk=(chk-19h) and 0FFh
+	@ CRC Check (Checksum of the header)
+	@ It should be calculated as:
+	@ Chk = 0: for i = 0A0h to 0BCh: chk = chk- [i]: next: chk = (chk-19h) and 0FFh
 	.byte   0xf0
 
-	@ Reserved Area (2 Bytes a 0)
+	@ Reserved Area (2 Bytes to 0)
 	.byte   0x00, 0x00
 
 	.align
@@ -113,128 +113,125 @@ _ENTRY_:
 start_rom:
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Copiamos el código de procesamiento de interrupciones a la IWRAM.           @
+@ We copied the interrupt processing code to the IWRAM.                       @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	ldr     r1, =__inicio_intr__
-	ldr     r2, =__fin_intr__
-	ldr     r3, =__inicio_intr_rom__
-	bl      copiar
+	ldr     r1, =__start_irq__
+	ldr     r2, =__end_irq__
+	ldr     r3, =__start_irq_rom__
+	bl      copy
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Inicializamos las pilas                                                     @
+@ Initialize the heap                                                         @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	ldr     r1, =__fondo_pila_user__
-	ldr     r2, =__tope_pila_svc__
-	ldr     r3, =RELLENO_PILA
-	bl      inicializar
+	ldr     r1, =__bot_heap_user__
+	ldr     r2, =__top_heap_svc__
+	ldr     r3, =HEAP_FILLER
+	bl      initialize
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Inicializamos los punteros de pila para cada modo                           @
+@ Initialize the stack pointers for each mode                                 @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	@ Cambiamos al modo IRQ
-	@ Deshabilitamos las interrupciones IRQ y FIQ en este modo
+	@ Switch to IRQ mode
+	@ We disable IRQ and FIQ interrupts in this mode
 	msr     CPSR_c, #(ARM_MODE_IRQ | ARM_I_BIT | ARM_F_BIT)
 
-	@ Inicializamos el puntero de pila
-	ldr     sp, =__tope_pila_irq__
+	@ Initialize the stack pointer
+	ldr     sp, =__top_heap_irq__
 
-
-	@ Cambiamos al modo supervisor
-	@ Deshabilitamos las interrupciones IRQ y FIQ en este modo
+	@ Switch to supervisor mode
+	@ We disable IRQ and FIQ interrupts in this mode
 	msr     CPSR_c, #(ARM_MODE_SVC | ARM_I_BIT | ARM_F_BIT)
 
-	@ Inicializamos el puntero de pila
-	ldr     sp, =__tope_pila_svc__
+	@ Initialize the stack pointer
+	ldr     sp, =__top_heap_svc__
 
-
-	@ Cambiamos al modo usuario (el que se quedará partir de ahora)
-	@ Deshabilitamos las interrupciones FIQ (no se usan en la GBA)
+	@ We change to user mode (which will stay from now)
+	@ We disable FIQ interrupts (not used in GBA)
 	msr     CPSR_c, #(ARM_MODE_USER | ARM_F_BIT)
 
-	@ Inicializamos el puntero de pila
-	ldr     sp, =__tope_pila_user__
+	@ Initialize the stack pointer
+	ldr     sp, =__top_heap_user__
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Preparamos el soporte de las interrupciones                                 @
+@ We prepare the interrupt support                                            @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	@ Cuando se produzca uan interrupción, la GBA salta a la dirección
-	@ que esté almacenada en IRQ_HANDLER (0x03007ffc), por tanto,
-	@ almacenanos en esta dirección la rutina de atención a las
-	@ interrupciones (definida más abajo)
-	ldr     r1, =gba_intr_handler_address
+	@ When an interruption occurs, the GBA jumps to the address
+	@ that is stored in IRQ_HANDLER (0x03007ffc), so store the
+	@ interrupt attention routine (defined below)
+	ldr     r1, =gba_irq_handler_address
 	ldr     r0, =gba_irq_main
 	str     r0, [r1]
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Copiamos las variables inicializadas de su dirección LMA a la VMA.          @
+@ We copy the initialized variables from their LMA address to the VMA.        @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	ldr     r1, =__inicio_datos__
-	ldr     r2, =__fin_datos__
-	ldr     r3, =__inicio_datos_rom__
-	bl      copiar
+	ldr     r1, =__start_data__
+	ldr     r2, =__end_data__
+	ldr     r3, =__start_data_rom__
+	bl      copy
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Fijamos a 0 la memoria RAM reservada para las variables sin inicializar.    @
+@ Set the RAM reserved for uninitialized variables to 0.                      @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	ldr     r1, =__inicio_bss__
-	ldr     r2, =__fin_bss__
+	ldr     r1, =__start_bss__
+	ldr     r2, =__end_bss__
 	ldr     r3, =0
-	bl      inicializar
+	bl      initialize
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Empieza el código en C                                                      @
+@ Start the code in C                                                         @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	ldr     r0, =main         @ Llamamos a la funcion main
-	bx      r0                @ Llamamos a la funcion main
-	b       .                 @ Colgamos el sistema si main retorna
+	ldr     r0, =main         @ We call the main function
+	bx      r0                @ We call the main function
+	b       .                 @ We hang the system if main returns
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Funciones auxiliares                                                        @
+@ Auxiliary Functions                                                         @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	@ Las colocamos en la sección de código
+	@ We put them in the code section
 	.section .text
 
-	@ De momento usamos código de 32 bits
+	@ Currently we use 32-bit code
 	.code 32
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Rutina para copiar código o datos de la memoria ROM a la RAM                @
-@ Parámetros:                                                                 @
-@   r1: Puntero a la posición inicial en la memoria RAM                       @
-@   r2: Puntero a la posición final en la memoria RAM                         @
-@   r3: Puntero a la posición inicial en la memoria ROM                       @
+@ Routine to copy code or data from ROM to RAM                                @
+@ Settings:                                                                   @
+@   r1: Pointer to initial position in RAM                                    @
+@   r2: Pointer to the final position in RAM                                  @
+@   r3: Pointer to initial position in ROM                                    @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	copiar:
+	copy:
 		cmp     r1, r2
-		bge     copia_hecha
+		bge     do_copy
 		ldrb    r4, [r3], #+1
 		strb    r4, [r1], #+1
-		b       copiar
+		b       copy
 
-	copia_hecha:
+	do_copy:
 		mov     pc, lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Rutina para inicializar una zona de memoria RAM a un valor fijo             @
-@ Parámetros:                                                                 @
-@   r1: Puntero a la posición inicial en la memoria RAM                       @
-@   r2: Puntero a la posición final en la memoria RAM                         @
-@   r3: Valor para la inicialización                                          @
+@ Routine to initialize a RAM zone to a fixed value                           @
+@ Settings:                                                                   @
+@   r1: Pointer to initial position in RAM                                    @
+@   r2: Pointer to the final position in RAM                                  @
+@   r3: Value for initialization                                              @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	inicializar:
+	initialize:
 		cmp     r1, r2
 		strne   r3, [r1], #+4
-		bne     inicializar
+		bne     initialize
 
 		mov     pc, lr
 
@@ -252,14 +249,14 @@ start_rom:
 
 gba_irq_main:
 	mov	r3, #0x4000000		@ REG_BASE
-	ldr	r2, [r3,#0x200]		@ Read	REG_IE
+	ldr	r2, [r3,#0x200]		@ Read REG_IE
 
-	ldr	r1, [r3, #0x208]	@ r1 = IME
-	str	r3, [r3, #0x208]	@ disable IME
+	ldr	r1, [r3, #0x208]	@ R1 = IME
+	str	r3, [r3, #0x208]	@ Disable IME
 	mrs	r0, spsr
-	stmfd	sp!, {r0-r1,r3,lr}	@ {spsr, IME, REG_BASE, lr_irq}
+	stmfd	sp!, {r0-r1,r3,lr}	@ {Spsr, IME, REG_BASE, lr_irq}
 
-	and	r1, r2,	r2, lsr #16	@ r1 =	IE & IF
+	and	r1, r2,	r2, lsr #16	@ R1 = IE & IF
 
 	ldrh	r2, [r3, #-8]		@\mix up with BIOS irq flags at 3007FF8h,
 	orr	r2, r2, r1				@ aka mirrored at 3FFFFF8h, this is required
@@ -279,12 +276,12 @@ gba_find_irq:
 
 gba_irq_no_handler:
 	strh	r1, [r3, #0x02]		@ IF Clear
-	ldmfd	sp!, {r0-r1,r3,lr}	@ {spsr, IME, REG_BASE, lr_irq}
-	str	r1, [r3, #0x208]	@ restore REG_IME
+	ldmfd	sp!, {r0-r1,r3,lr}	@ {Spsr, IME, REG_BASE, lr_irq}
+	str	r1, [r3, #0x208]	@ Restore REG_IME
 	mov	pc,lr
 
 jump_intr:
-	ldr	r2, [r2]		@ user IRQ handler address
+	ldr	r2, [r2]		@ User IRQ handler address
 	cmp	r2, #0
 	beq	gba_irq_no_handler
 
@@ -303,20 +300,20 @@ gba_irq_got_handler:
 gba_irq_ret:
 	pop	{lr}
 	mov	r3, #0x4000000		@ REG_BASE
-	str	r3, [r3, #0x208]	@ disable IME
+	str	r3, [r3, #0x208]	@ Disable IME
 
 	mrs	r3, cpsr
 	bic	r3, r3, #0xdf		@ \__
 	orr	r3, r3, #0x92		@ /  --> Disable IRQ. Enable FIQ. Set CPU mode to IRQ.
 	msr	cpsr, r3
 
-	ldmfd   sp!, {r0-r1,r3,lr}	@ {spsr, IME, REG_BASE, lr_irq}
-	str	r1, [r3, #0x208]		@ restore REG_IME
-	msr	spsr, r0				@ restore spsr
+	ldmfd   sp!, {r0-r1,r3,lr}	@ {Spsr, IME, REG_BASE, lr_irq}
+	str	r1, [r3, #0x208]		@ Restore REG_IME
+	msr	spsr, r0				@ Restore spsr
 	mov	pc,lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ End                                                                         @
+@ End @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 .pool

@@ -23,22 +23,22 @@ SEARCH_DIR(.)
 MEMORY
 {
   bios    : org = 0x00000000, len = 0x00004000 /* BIOS - ROM         (16 KB) */
-  ewram   : org = 0x02000000, len = 0x00040000 /* Work RAM externa  (256 KB) */
+  ewram   : org = 0x02000000, len = 0x00040000 /* External Work RAM (256 KB) */
 
-  iwram1  : org = 0x03000000, len = 0x00007f00 /* Work RAM interna   (32 KB) */
+  iwram1  : org = 0x03000000, len = 0x00007f00 /* Internal Work RAM  (32 KB) */
   iwram2  : org = 0x03007f00, len = 0x00000100
 
-  ioregs  : org = 0x04000000, len = 0x00000400 /* Registros de E/S    (1 KB) */
-  palette : org = 0x05000000, len = 0x00000400 /* Paleta              (1 KB) */
+  ioregs  : org = 0x04000000, len = 0x00000400 /* I/O Registers       (1 KB) */
+  palette : org = 0x05000000, len = 0x00000400 /* Palette             (1 KB) */
   vram    : org = 0x06000000, len = 0x00180000 /* Video RAM          (96 KB) */
-  oam     : org = 0x07000000, len = 0x00000400 /* Atributos de objs   (1 KB) */
-  rom     : org = 0x08000000, len = 0x02000000 /* ROM del cartucho   (32 MB) */
+  oam     : org = 0x07000000, len = 0x00000400 /* Object Attributes   (1 KB) */
+  rom     : org = 0x08000000, len = 0x02000000 /* Cartridge ROM      (32 MB) */
 }
 
 SECTIONS
 {
   /*
-   * Registros de E/S.
+   * I/O Registry
    */
   .ioregs : 
   {
@@ -103,13 +103,13 @@ SECTIONS
   .intr :
   {
     . = ALIGN(4);
-    __inicio_intr__ = . ;
+    __start_irq__ = . ;
     *(.intr);          /* Procesamiento de interrupciones */
     . = ALIGN(4);
-    __fin_intr__ = . ;
+    __end_irq__ = . ;
   } > iwram1 AT > rom
 
-  __inicio_intr_rom__ = LOADADDR(.intr);
+  __start_irq_rom__ = LOADADDR(.intr);
 
   /*
    * Los datos se copian en la ROM en las direcciones LMA siguientes, y también
@@ -120,13 +120,13 @@ SECTIONS
   .data :
   {
     . = ALIGN(4);
-    __inicio_datos__ = . ;
+    __start_data__ = . ;
     *(.data);          /* Datos inicializados */
     . = ALIGN(4);
-    __fin_datos__ = . ;
+    __end_data__ = . ;
   } > iwram1 AT > rom
 
-  __inicio_datos_rom__ = LOADADDR(.data);
+  __start_data_rom__ = LOADADDR(.data);
 
   /*
    * Para las variables sin inicializar y la pila se reserva espacio en la
@@ -135,11 +135,11 @@ SECTIONS
   .bss :
   {
     . = ALIGN(4);
-    __inicio_bss__ = . ;
+    __start_bss__ = . ;
     *(.bss);           /* Variables inicializadas a cero */
     *(COMMON);         /* Variables sin inicializar */
     . = ALIGN(4);
-    __fin_bss__ = . ;
+    __end_bss__ = . ;
   } > iwram1
   
   /*
@@ -147,13 +147,13 @@ SECTIONS
    */
   .system :
   {
-    __fondo_pila_irq__ = .;        /* Pila en el modo IRQ */
+    __bot_heap_irq__ = .;        /* Pila en el modo IRQ */
     . += 0x00a0;                   /* 160 bytes */
-    __tope_pila_irq__ = .;
+    __top_heap_irq__ = .;
     
-    __fondo_pila_svc__ = .;        /* Pila en el modo supervisor */
+    __bot_heap_svc__ = .;        /* Pila en el modo supervisor */
     . += 0x0040;                   /* 64 bytes */
-    __tope_pila_svc__ = .;
+    __top_heap_svc__ = .;
     
     . += 0x0010;                   /* Allocated area */
     
@@ -162,7 +162,7 @@ SECTIONS
     
     . += 0x0004;                   /* Allocated area */
     
-    gba_intr_check_flag = .;       /* Interrupt check flag */
+    gba_irq_check_flag = .;       /* Interrupt check flag */
     . += 0x0002;                   /* 2 bytes */
     
     gba_return_address_sel_ = .;   /* Return address selector */
@@ -170,13 +170,13 @@ SECTIONS
     
     . += 0x0001;                   /* Allocated area */
  
-    gba_intr_handler_address = .;  /* Dirección del manejador de interrupciones */
+    gba_irq_handler_address = .;  /* Dirección del manejador de interrupciones */
     . += 0x0004;                   /* 4 bytes */
   } > iwram2
 
   /* Reservamos 1 KB para la pila del modo user */
-  __tope_pila_user__ = __fondo_pila_irq__;
-  __fondo_pila_user__ = __tope_pila_user__ - 0x400;
+  __top_heap_user__ = __bot_heap_irq__;
+  __bot_heap_user__ = __top_heap_user__ - 0x400;
   
   end = . ;
 }
