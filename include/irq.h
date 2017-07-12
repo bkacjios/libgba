@@ -37,8 +37,13 @@ typedef void (*gba_irq_handler)(void);
 /*
  *  Table of pointers to interrupt handlers
  */
-extern volatile gba_irq_handler *gba_irq_handler_table;
 
+struct gba_irq_handler_table{
+	gba_irq_handler handler;
+	short mask;
+};
+
+#define IRQ_MAX	15
 
 /*****************************************************************************/
 /* IE, IF: Masks for interruptions */

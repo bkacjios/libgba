@@ -131,7 +131,7 @@ inline void gba_sprite_init_palette16(short index, const void * palette)
  * @param data Pointer to the buffer containing the frames that define the sprite
  * @return The sprite created.
  */
-void gba_sprite_new(sprite_struct * sp, short size, short color, const void *data)
+void gba_sprite_new(sprite_struct * sp, short size, short color, const void *data, int len)
 {
   short obj_size = (size & 0xc000);
   short obj_shape = (size & 0x0003) << 14;
@@ -224,15 +224,9 @@ void gba_sprite_new(sprite_struct * sp, short size, short color, const void *dat
       break;
   }
 
-  /* In principle we assume that there is only one frame */
-  sp->frame_seq_len = 1;
-  sp->frame_seq = NULL;
-  sp->frame_index = 0;
-
   /* Initialize its attributes (pos_x and pos_y and set to 0) */
   gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[0] |= color | obj_shape;
   gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[1] |= obj_size;
-  gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[2] |= gba_sprite_next_obj_name;
   
   /* Size in transfer pixels */
   sp->frame_size = sp->width * sp->height;
@@ -242,7 +236,7 @@ void gba_sprite_new(sprite_struct * sp, short size, short color, const void *dat
     sp->frame_size /= 2;
 
   /* Copy the characters from the first frame to the sprite */
-  gba_dma_memcpy((void*)gba_vram.obj_data[gba_sprite_next_obj_name], data, sp->frame_size);
+  gba_dma_memcpy((void*)gba_vram.obj_data[gba_sprite_next_obj_name], data, len);
   
   /* We set the offset for the next sprite */
   gba_sprite_next_obj_name += sp->frame_size/sizeof(gba_video_char16);
@@ -479,37 +473,17 @@ void inline gba_sprite_disable_double_size(sprite_struct * sp)
 /*****************************************************************************/
 
 /*
- * Define a sequence of frames to create the animation of the sprite
+ * Set the frame of the animation
  * @param sp Pointer to sprite
- * @param seq Vector that defines the sequence
- * @param len Length of the sequence
+ * @param offset Frame offset of the animation
  */
-void inline gba_sprite_set_frame_seq(sprite_struct * sp, const short* seq, short len)
+void gba_sprite_set_frame(sprite_struct * sp, short offset)
 {
-  sp->frame_seq = seq;
-  sp->frame_seq_len = len;
-  sp->frame_index = 0;
-}
+  /* clear the old offset */
+  gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[2] &= 0xfc00;
 
-/*****************************************************************************/
-
-/*
- * Move to the next frame of the animation
- * @param sp Pointer to sprite
- */
-void gba_sprite_next_frame(sprite_struct * sp)
-{
-  const void *frame = sp->data;
-  short name = gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[2] & 0x3ff;
-
-  if (sp->frame_seq)
-  {
-    sp->frame_index = gba_mod(sp->frame_index+1, sp->frame_seq_len);
-    frame = sp->data + (sp->frame_size * sp->frame_seq[sp->frame_index]);
-  }
-
-  /* We copy the characters of the frame to the video memory */
-  gba_dma_memcpy((void*)gba_vram.obj_data[name], frame, sp->frame_size);
+  /* apply the new one */
+  gba_sprite_oam_shadow.obj[sp->oam_entry].ATTRIBUTE[2] |= (offset & 0x03ff);
 }
 
 /*****************************************************************************/

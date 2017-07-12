@@ -13,12 +13,12 @@
 /* Punto de entrada                                                          */
 /*****************************************************************************/
 
-ENTRY(inicio)
+ENTRY(_ENTRY_)
 
 SEARCH_DIR(.)
 
 /*
- * Mapa de memoria de la consola
+ * Console memory map
  */
 MEMORY
 {

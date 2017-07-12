@@ -1,3 +1,5 @@
 /libgba.a
 /*.o
 /luts/print_luts
+*.lua
+build/

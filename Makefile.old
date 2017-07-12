@@ -1,0 +1,35 @@
+ifeq ($(strip $(DEVKITARM)),)
+$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM)
+endif
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro)
+endif
+include $(DEVKITARM)/gba_rules
+
+TARGET = arm-none-eabi
+AR           = $(DEVKITARM)/bin/$(TARGET)-ar
+AS           = $(DEVKITARM)/bin/$(TARGET)-as
+CC           = $(DEVKITARM)/bin/$(TARGET)-gcc
+
+INCDIR      = -I include
+ASFLAGS     = $(INCDIR) -mcpu=arm7tdmi -mfpu=softfpa -gstabs
+CFLAGS      = $(INCDIR) -g -Wall -mcpu=arm7tdmi -c
+ARFLAGS     = -crs
+
+LIB         = libgba.a
+OBJS        = src/gba_video.o src/gba_bg.o src/gba_draw.o src/gba_keypad.o src/gba_dma.o src/gba_irq.o src/gba_timer.o src/gba_bios.o src/gba_sound.o src/gba_sprite.o src/gba_fp.o src/gba_rand.o
+
+all : $(LIB)($(OBJS))
+
+$(LIB)(%) : %
+	$(AR) $(ARFLAGS) $(LIB) $<
+
+%.o : %.s
+	$(AS) $(ASFLAGS) $< -o $@
+
+%.o : %.c
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	rm -f $(LIB)
+	rm -f $(OBJS)

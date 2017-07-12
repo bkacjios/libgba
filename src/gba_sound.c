@@ -146,7 +146,8 @@ void gba_sound_ds_play(u_char channel, const void* samples, u_short size, u_shor
   gba_timer_init(TIMER1, TIMER_CASCADE | TIMER_INT, TIMER_OVERFLOW - size);
   
   /* We enable the attention of the interruption */
-  gba_irq_enable(IRQ_TIMER1, gba_sound_ds_stop);
+  gba_irq_enable(IRQ_TIMER1);
+  gba_irq_set(IRQ_TIMER1, gba_sound_ds_stop);
   
   /* We enable the sound driver */
   gba_sound_enable();
