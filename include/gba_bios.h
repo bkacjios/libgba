@@ -19,6 +19,9 @@
 /*
  * Constants to create the bitmask of gba_register_ram_reset.
  */
+#define ROM_RESTART		0
+#define RAM_RESTART		1
+
 #define RESET_EWRAM    (1 << 0) /* Do not use when WRAM is returned */
 #define RESET_IWRAM    (1 << 1) /* Exclude the last 0x200 bytes */
 #define RESET_PALETTE  (1 << 2)
@@ -48,7 +51,7 @@
  *      - 0x00: Jump to 0x08000000 (default)
  *      - other: Jump to the address 0x02000000
  */
-extern void gba_soft_reset(void);
+extern void gba_soft_reset(int flags);
 
 /*****************************************************************************/
 
@@ -130,8 +133,8 @@ extern int gba_abs_div(int numerator, int denominator);
 extern int gba_arm_div(int denominator, int numerator);
 extern u_int gba_sqrt(u_int val);
 extern u_int gba_arc_tan(u_int val);
-extern u_int gba_arc_tan2(u_int val);
-extern u_int gba_bios_checksum(u_int val);
+extern u_int gba_arc_tan2(u_int val1, u_int val2);
+extern u_int gba_bios_checksum();
 
 /*****************************************************************************/
 

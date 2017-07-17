@@ -48,7 +48,7 @@ typedef volatile int   * gba_word32;       /* 32-bit memory word */
 #include "dma.h"       /* DMA Controller */
 #include "timer.h"     /* Timers */
 #include "serial.h"    /* Serial Port */
-#include "keypad.h"    /* Buttons */
+#include "input.h"    /* Buttons */
 #include "irq.h"       /* Interrupt Controller */
 
 /*****************************************************************************/

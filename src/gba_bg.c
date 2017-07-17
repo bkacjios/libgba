@@ -30,7 +30,7 @@ bg_struct gba_bgs[4]=
     NULL,                                 /* Pointer to PC record (only for rotating backgrounds) */
     NULL,                                 /* Pointer to PD record (only for rotating backgrounds) */
     NULL,                                 /* Pointer to the x-coordinate of the reference point (only for rotating backgrounds) */
-    NULL,                                 /* Pointer to the coordinate and the reference point (only for rotating backgrounds) */
+    NULL,                                 /* Pointer to the y-coordinate of the reference point (only for rotating backgrounds) */
     0,                                    /* Block for storing characters */
     0,                                    /* Block to store the map that defines the background */
     0,                                    /* Horizontal shift */
@@ -55,7 +55,7 @@ bg_struct gba_bgs[4]=
     NULL,                                 /* Pointer to PC record (only for rotating backgrounds) */
     NULL,                                 /* Pointer to PD record (only for rotation backgrounds) */
     NULL,                                 /* Pointer to the x-coordinate of the reference point (only for rotation backgrounds) */
-    NULL,                                 /* Pointer to the coordinate and the reference point (only for rotation backgrounds) */
+    NULL,                                 /* Pointer to the y-coordinate of the reference point (only for rotation backgrounds) */
     0,                                    /* Block for storing characters */
     0,                                    /* Block to store the map that defines the background */
     0,                                    /* Horizontal shift */
@@ -80,7 +80,7 @@ bg_struct gba_bgs[4]=
     (gba_word16) &(gba_video_regs.BG2PC),    /* Pointer to PC record (only for rotating backgrounds) */
     (gba_word16) &(gba_video_regs.BG2PD),    /* Pointer to PD record (only for rotation backgrounds) */
     (gba_word32) &(gba_video_regs.BG2X),     /* Pointer to the x-coordinate of the reference point (only for rotation backgrounds) */
-    (gba_word32) &(gba_video_regs.BG2Y),     /* Pointer to the coordinate and the reference point (only for rotation backgrounds) */
+    (gba_word32) &(gba_video_regs.BG2Y),     /* Pointer to the y-coordinate of the reference point (only for rotation backgrounds) */
     0,                                    /* Block for storing characters */
     0,                                    /* Block to store the map that defines the background */
     0,                                    /* Horizontal shift */
@@ -105,7 +105,7 @@ bg_struct gba_bgs[4]=
     (gba_word16) &(gba_video_regs.BG2PC),    /* Pointer to PC record (only for rotating backgrounds) */
     (gba_word16) &(gba_video_regs.BG2PD),    /* Pointer to PD record (only for rotation backgrounds) */
     (gba_word32) &(gba_video_regs.BG2X),     /* Pointer to the x-coordinate of the reference point (only for rotation backgrounds) */
-    (gba_word32) &(gba_video_regs.BG2Y),     /* Pointer to the coordinate and the reference point (only for rotation backgrounds) */
+    (gba_word32) &(gba_video_regs.BG2Y),     /* Pointer to the y-coordinate of the reference point (only for rotation backgrounds) */
     0,                                    /* Block for storing characters */
     0,                                    /* Block to store the map that defines the background */
     0,                                    /* Horizontal shift */

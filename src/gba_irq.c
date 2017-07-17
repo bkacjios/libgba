@@ -41,7 +41,7 @@ void gba_irq_init() {
 		gba_irq_table[i].mask = 0;
 	}
 
-	//IRQ_HANDLER = intr_main;
+	IRQ_HANDLER = gba_irq_main;
 }
 
 gba_irq_handler* gba_irq_set(short mask, gba_irq_handler function) {

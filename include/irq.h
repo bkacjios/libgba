@@ -43,6 +43,8 @@ struct gba_irq_handler_table{
 	short mask;
 };
 
+#define IRQ_HANDLER	*(gba_irq_handler *)(0x03007ffc)
+
 #define IRQ_MAX	15
 
 /*****************************************************************************/

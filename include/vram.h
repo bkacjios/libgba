@@ -28,10 +28,8 @@
 /* Format of the RBG triplets in the VRAM */
 /*****************************************************************************/
 
-#define RGB(r,g,b)             ((unsigned short)(((r) & 0x001f) + \
-                                                (((g) & 0x001f) << 5) + \
-                                                (((b) & 0x001f) << 10)))
-
+#define RGB5(r,g,b) ((r)|((g)<<5)|((b)<<10))
+#define RGB8(r,g,b) ( (((b)>>3)<<10) | (((g)>>3)<<5) | ((r)>>3) )
 
 /*****************************************************************************/
 /* VRAM memory interface */
@@ -86,7 +84,7 @@ typedef union
     gba_video_char16 obj_data[1024];
   };
   
-  short video_buffer[BG_MODE_WIDTH3*BG_MODE_HEIGHT3]; // Modo 3
+  short video_buffer[BG_MODE_WIDTH3*BG_MODE_HEIGHT3]; /* Mode 3 */
     
   struct /* Modes 4 and 5 */
   {

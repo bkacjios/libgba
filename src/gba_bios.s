@@ -38,8 +38,8 @@
 @ would have to be compiled with the -mthumb-interwork option                 @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-               .code 32
-               .section .text
+.code 32
+.section .text
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -59,10 +59,10 @@
 @
 @ extern void gba_soft_reset(void);
 @
-               .global gba_soft_reset
+.global gba_soft_reset
 gba_soft_reset:
-            swi      (0x00 << 16)
-            bx       lr
+	swi      (0x00 << 16)
+	bx       lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -92,10 +92,10 @@ gba_soft_reset:
 @
 @ extern void gba_register_ram_reset(int flags);
 @
-               .global gba_register_ram_reset
+.global gba_register_ram_reset
 gba_register_ram_reset:
-            swi      (0x01 << 16)
-            bx       lr
+	swi      (0x01 << 16)
+	bx       lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -110,10 +110,10 @@ gba_register_ram_reset:
 @
 @ extern void gba_halt(void);
 @
-               .global gba_halt
+.global gba_halt
 gba_halt:
-            swi      (0x02 << 16)
-            bx       lr
+	swi      (0x02 << 16)
+	bx       lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -133,10 +133,10 @@ gba_halt:
 @
 @ extern void gba_stop(void);
 @
-               .global gba_stop
+.global gba_stop
 gba_stop:
-            swi      (0x03 << 16)
-            bx       lr
+	swi      (0x03 << 16)
+	bx       lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -156,18 +156,18 @@ gba_stop:
 @
 @ extern void gba_intr_wait(int clearFlag, int irq);
 @
-               .global gba_intr_wait
+.global gba_intr_wait
 gba_intr_wait:
-            swi      (0x04 << 16)
-            bx       lr
+	swi      (0x04 << 16)
+	bx       lr
 
 @
 @ extern void gba_intr_wait_vblank(void);
 @
-               .global gba_intr_wait_vblank
+.global gba_intr_wait_vblank
 gba_intr_wait_vblank:
-            swi      (0x05 << 16)
-            bx       lr
+	swi      (0x05 << 16)
+	bx       lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -188,28 +188,28 @@ gba_intr_wait_vblank:
 @
 @ extern int gba_div(int numerator, int denominator);
 @
-               .global gba_div
+.global gba_div
 gba_div:
-            swi      (0x06 << 16)
-            bx       lr
+	swi      (0x06 << 16)
+	bx       lr
 
 @
 @ extern int gba_mod(int numerator, int denominator);
 @
-               .global gba_mod
+.global gba_mod
 gba_mod:
-            swi      (0x06 << 16)
-            mov      r0, r1
-            bx       lr
+	swi      (0x06 << 16)
+	mov      r0, r1
+	bx       lr
 
 @
 @ extern int gba_abs_div(int numerator, int denominator);
 @
-               .global gba_abs_div
+.global gba_abs_div
 gba_abs_div:
-            swi      (0x06 << 16)
-            mov      r0, r3
-            bx       lr
+	swi      (0x06 << 16)
+	mov      r0, r3
+	bx       lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -230,10 +230,10 @@ gba_abs_div:
 @
 @ extern int gba_arm_div(int denominator, int numerator);
 @
-               .global gba_arm_div
+.global gba_arm_div
 gba_arm_div:
-            swi      (0x07 << 16)
-            bx       lr
+	swi      (0x07 << 16)
+	bx       lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -255,34 +255,55 @@ gba_arm_div:
 @
 @ extern u_int gba_sqrt(u_int val);
 @
-               .global gba_sqrt
+.global gba_sqrt
 gba_sqrt:
-            swi      (0x08 << 16)
-            bx       lr
+	swi      (0x08 << 16)
+	bx       lr
 
 @
 @ extern u_int gba_arc_tan(u_int val);
 @
-               .global gba_arc_tan
+.global gba_arc_tan
 gba_arc_tan:
-            swi      (0x09 << 16)
-            bx       lr
+	swi      (0x09 << 16)
+	bx       lr
 
 @
 @ extern u_int gba_arc_tan2(u_int val);
 @
-               .global gba_arc_tan2
+.global gba_arc_tan2
 gba_arc_tan2:
-            swi      (0x0A << 16)
-            bx       lr
+	swi      (0x0A << 16)
+	bx       lr
 
 @
-@ extern u_int gba_bios_checksum(u_int val);
+@ extern u_int gba_cpu_set(const void *source,  void *dest, u32 mode);
 @
-               .global gba_bios_checksum
+.global gba_cpu_set
+gba_cpu_set:
+	swi      (0x0B << 16)
+	bx       lr
+
+@
+@ extern u_int gba_cpu_fast_set(const void *source,  void *dest, u32 mode);
+@
+.global gba_cpu_fast_set
+gba_cpu_fast_set:
+	swi      (0x0C << 16)
+	bx       lr
+
+@
+@ extern u_int gba_bios_checksum(void);
+@
+.global gba_bios_checksum
 gba_bios_checksum:
-            swi      (0x0D << 16)
-            bx       lr
+	swi      (0x0D << 16)
+	bx       lr
+
+.global  gba_multi_boot
+gba_multi_boot:
+	swi      (0x25 << 16)
+	bx       lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                             @
@@ -301,8 +322,7 @@ gba_bios_checksum:
 @
 @ extern void gba_vba_print(const char *str);
 @
-               .global gba_vba_print
+.global gba_vba_print
 gba_vba_print:
-            swi      (0xff << 16)
-            bx       lr
-
+	swi      (0xff << 16)
+	bx       lr
